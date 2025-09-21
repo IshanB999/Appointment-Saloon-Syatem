@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!------------------------ Meta Starts ---------------------->
+    <meta charset="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="profile" href="http://gmpg.org/xfn/11">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="http://imagiocreations.com/wp-content/themes/starter/imagio_s/img/logo/imagio_creations_logo_icon_green.png">
+    <meta property="og:image"
+        content="http://imagiocreations.com/wp-content/themes/starter/imagio_s/img/background/dispaly_background.jpg" />
+    <meta property="og:image:alt" content="imagio">
+    <!------------------------- Meta Ends ----------------------->
+
+
+    <!----------------------- Fonts Starts ---------------------->
+    <script src="https://kit.fontawesome.com/1358cc6429.js" crossorigin="anonymous"></script>
+    <!------------------------ Fonts Ends ----------------------->
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/bowercomponent/slick.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/bowercomponent/slick-theme.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/bowercomponent/lightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/bowercomponent/flaticon.css' %}" rel="stylesheet">
+
+    <link href="{% static 'imagio_frontend/css/global.min.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/thestyles.min.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_frontend/css/responsive.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!------------------------------------- Wrapper Starts ------------------------------------->
+    <div id="wrapper">
+        <!--------------------------------- Header Wrapper Starts ---------------------------------->
+        <header id="header-wrapper">
+            <div class="custom-container remove-top-bottom-padding type-small-side-padding">
+                <div class="common-logo-nav-wrapper">
+                    <div class="common-toggle type-menu type-open">
+                        <div class="toggle-item">
+                            <div class="inner">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="toggle-item">
+                            Menu
+                        </div>
+                    </div>
+
+                    <div class="common-logo-container">
+                        <a href="">
+                            <img src="{% static 'imagio_frontend/img/logo/neeldavids-logo.png' %}">
+                        </a>
+                    </div>
+
+
+                    <div class="action-container">
+                        <div class="action-item type-btn">
+                            <a href="" class="co-btn type-appointment">
+                                <span>Appointment</span>
+                            </a>
+                        </div>
+                        <div class="action-item type-icon">
+                            <a href=""><i class="flaticon-email"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <header id="header-wrapper-slide">
+            <div class="custom-container remove-top-bottom-padding type-small-side-padding">
+                <div class="common-logo-nav-wrapper">
+                    <div class="common-toggle type-menu type-open">
+                        <div class="toggle-item">
+                            <div class="inner">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="toggle-item">
+                            Menu
+                        </div>
+                    </div>
+
+                    <div class="common-logo-container">
+                        <a href="<?php echo site_url(); ?>">
+                            <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/logo/neeldavids-logo.png">
+                        </a>
+                    </div>
+
+
+                    <div class="action-container">
+                        <div class="action-item type-btn">
+                            <a href="http://localhost/wp/neel_davids/appointment/" class="co-btn type-appointment">
+                                <span>Appointment</span>
+                            </a>
+                        </div>
+                        <div class="action-item type-icon">
+                            <a href=""><i class="flaticon-email"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!---------------------------------- Header Wrapper Ends ----------------------------------->
+
+        <!------------------------------- Navigation Wrapper Start --------------------------------->
+        <div id="navigation-wrapper">
+            <div class="nav-header">
+                <div class="custom-container remove-top-bottom-padding type-small-side-padding">
+                    <div class="common-logo-nav-wrapper type-nav">
+                        <div class="common-toggle type-menu">
+                            <div class="toggle-item">
+                                <div class="inner">
+                                    <i class="flaticon-cancel"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-body">
+                <div class="layout-container">
+                    <div class="layout-item">
+                        <div class="layout-inner">
+                            <div class="nav-container">
+                                <nav class="menu-main-menu-container">
+                                    <ul id="menu-main-menu" class="menu">
+                                        <li id="menu-item-46"
+                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-46">
+                                            <a href="https://demos.imagio.com.np/frontend/neeldavids/about/">About</a>
+                                        </li>
+                                        <li id="menu-item-47"
+                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47">
+                                            <a
+                                                href="https://demos.imagio.com.np/frontend/neeldavids/outlets/">Outlets</a>
+                                        </li>
+                                        <li id="menu-item-258"
+                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-258">
+                                            <a
+                                                href="https://demos.imagio.com.np/frontend/neeldavids/academy-2/">Academy</a>
+                                        </li>
+                                        <li id="menu-item-49"
+                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-49">
+                                            <a
+                                                href="https://demos.imagio.com.np/frontend/neeldavids/franchise/">Franchise</a>
+                                        </li>
+                                        <li id="menu-item-50"
+                                            class="menu-item menu-item-type-post_type menu-item-object-page menu-item-50">
+                                            <a
+                                                href="https://demos.imagio.com.np/frontend/neeldavids/contact/">Contact</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="common-copyright type-nav">
+                                <p>© 2025 Neel David's. Crafted by <a href="https://imagiocreations.com"
+                                        target="_blank">Imagio Creations</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layout-item">
+                        <div class="layout-inner">
+                            <div class="appointment-container">
+                                <div class="image-container">
+                                    <img
+                                        src="https://demos.imagio.com.np/frontend/neeldavids/wp-content/themes/starter/imagio_s/img/background/nav-image-2.jpg">
+                                </div>
+                                <div class="text-container">
+                                    <div class="title">
+                                        <h2>Make an Appointment</h2>
+                                    </div>
+                                    <div class="content">
+                                        <p>Want to book a session with us? Click the button below to fill out the
+                                            appointment form. Our team will contact you shortly to confirm your booking.
+                                        </p>
+                                        <div class="common-action">
+                                            <a href="https://demos.imagio.com.np/frontend/neeldavids/appointment/"
+                                                class="co-btn">
+                                                <span>Book Now</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-------------------------------- Navigation Wrapper Ends --------------------------------->
+
+
+        <!-------------------------------- Content Wrapper Starts ---------------------------------->
+        <div id="content-wrapper">

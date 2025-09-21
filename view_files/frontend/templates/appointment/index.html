@@ -1,0 +1,197 @@
+{% load i18n static view_files_frontend_template_tags %}
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+{{ wp_header_full|safe }}
+<link rel="preconnect" href="https://demos.imagio.com.np" crossorigin>
+<div id="appointment-page">
+    <section class="appointment-section common-element-container">
+        <div class="custom-container medium-width-container">
+            <div class="section-title align-center margin-lg">
+                <div class="common-tagline">
+                    <h3>Appointment</h3>
+                </div>
+                <h1>Plan Your </h1>
+                <div class="content">
+                    <p>Pick your perfect time and let us take care of the rest.</p>
+                </div>
+            </div>
+            <div class="content">
+                <div class="common-form">
+                    <form method="POST" action="{% url 'store_appointment_booking' %}">
+                        {% csrf_token %}
+                        <div class="form-row-container">
+                             <!-- Choose Service (hidden until location is selected) -->
+                            <div class="row-item" id="service-section" style="display: none;">
+                                <div class="common-title type-2 margin-lg">
+                                    <h5>Choose a service</h5>
+                                </div>
+                                <div class="fields">
+                                    <div class="form-group">
+                                        <div class="checkbox-row-container" id="service-container">
+                                            <!-- Services will be loaded dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Choose Location -->
+                            <div class="row-item">
+                                <div class="common-title type-2 margin-sm">
+                                    <h5>Choose Location</h5>
+                                </div>
+                                <div class="fields">
+                                    <div class="form-group">
+                                        <select name="outlet" id="outlet">
+                                            <option value="">Choose your preferred location*</option>
+                                            {% for outlet in outlets %}
+                                            <option value="{{ outlet.id }}">{{ outlet.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Personal Information -->
+                            <div class="row-item">
+                                <div class="common-title type-2 margin-sm">
+                                    <h5>Personal Information</h5>
+                                </div>
+                                <div class="fields">
+                                    <div class="form-group">
+                                        <input type="text" name="full_name" placeholder="Full Name*" required>
+                                    </div>
+                                    <div class="form-group half-width">
+                                        <input type="tel" name="mobile_no" placeholder="Mobile No*" required>
+                                    </div>
+                                    <div class="form-group half-width">
+                                        <input type="tel" name="email" placeholder="Email Address*" required>
+                                    </div>
+                                    <div class="form-group half-width second-last">
+                                        <input type="date" name="booking_date" placeholder="Booking Date*" required>
+                                    </div>
+                                    <div class="form-group half-width">
+                                        <input type="time" name="booking_time" placeholder="Booking Time*" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="form-action">
+                            <input type="submit" class="co-btn type-fill" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="element-item type-scissor type-contact">
+            <img src="{% static 'imagio_frontend/img/texture/element-scissor-contact.png' %}">
+        </div>
+        <div class="element-item type-comb type-contact">
+            <img src="{% static 'imagio_frontend/img/texture/element-comb-contact.png' %}">
+        </div>
+    </section>
+</div>
+{{ wp_footer_full|safe }}
+
+<style>
+    body.menu-open #navigation-wrapper {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important
+    }
+    body.menu-open { overflow: hidden }
+</style>
+
+<script>
+    // Navigation toggle script (kept as-is)
+    (function () {
+        function $(s, r) { return (r || document).querySelector(s) }
+        function $all(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)) }
+        function openPanel(p) {
+            document.body.classList.add('body-height', 'menu-open');
+            if (!p) return;
+            p.classList.add('open', 'is-open', 'show', 'active');
+            p.setAttribute('aria-hidden', 'false');
+            p.style.display = 'block'; p.style.visibility = 'visible';
+        }
+        function closePanel(p) {
+            document.body.classList.remove('body-height', 'menu-open');
+            if (!p) return;
+            p.classList.remove('open', 'is-open', 'show', 'active');
+            p.setAttribute('aria-hidden', 'true');
+            p.style.removeProperty('display'); p.style.removeProperty('visibility');
+        }
+        function bind() {
+            var panel = $('#navigation-wrapper');
+            $all('.common-toggle.type-menu.type-open').forEach(function (el) {
+                el.addEventListener('click', function (e) { e.preventDefault(); openPanel(panel); }, { passive: false });
+            });
+            $all('#navigation-wrapper .common-toggle.type-menu, .common-toggle.type-menu.type-close').forEach(function (el) {
+                el.addEventListener('click', function (e) { e.preventDefault(); closePanel(panel); }, { passive: false });
+            });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(panel); });
+            if (panel) {
+                panel.addEventListener('click', function (e) { if (e.target === panel && document.body.classList.contains('menu-open')) closePanel(panel); });
+            }
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+        else bind(); 
+    })();
+
+    // Dynamic services based on outlet selection
+    document.addEventListener("DOMContentLoaded", function () {
+        const outletSelect = document.getElementById("outlet");
+        const serviceSection = document.getElementById("service-section");
+        const serviceContainer = document.getElementById("service-container");
+
+        outletSelect.addEventListener("change", function () {
+            const outletId = this.value;
+
+            if (!outletId) {
+                serviceSection.style.display = "none";
+                serviceContainer.innerHTML = "";
+                return;
+            }
+
+            fetch("{% url 'get_services_for_outlet' %}?outlet_id=" + outletId)
+                .then(response => response.json())
+                .then(data => {
+                    let html = "";
+
+                    if (data.gents.length > 0) {
+                        html += `<div class="checkbox-row">
+                                    <div class="common-title font-sm margin-lg"><h5>For Gents</h5></div>
+                                    <div class="checkbox-container">`;
+                        data.gents.forEach(service => {
+                            html += `<div class="checkbox-item">
+                                        <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
+                                        <label for="service_${service.id}">${service.name}</label>
+                                     </div>`;
+                        });
+                        html += `</div></div>`;
+                    }
+
+                    if (data.ladies.length > 0) {
+                        html += `<div class="checkbox-row">
+                                    <div class="common-title font-sm margin-lg"><h5>For Ladies</h5></div>
+                                    <div class="checkbox-container">`;
+                        data.ladies.forEach(service => {
+                            html += `<div class="checkbox-item">
+                                        <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
+                                        <label for="service_${service.id}">${service.name}</label>
+                                     </div>`;
+                        });
+                        html += `</div></div>`;
+                    }
+
+                    serviceContainer.innerHTML = html;
+
+                    // Show section only if services exist
+                    serviceSection.style.display = (html.trim() !== "") ? "block" : "none";
+                });
+        });
+    });
+</script>

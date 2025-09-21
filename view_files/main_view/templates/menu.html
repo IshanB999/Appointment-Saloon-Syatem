@@ -1,0 +1,41 @@
+{% load i18n static view_files_main_view_template_tags %}
+{% url 'member_home' as member_home %}
+
+<div class="block-item type-controls">
+    <div class="navigation-container">
+        <div class="navigation-item">
+            <div class="profile-container">
+                <div class="avatar-container">
+                    <img src="{% static 'imagio_theme/img/placeholder/placeholder-person.jpg' %}">
+                </div>
+                <div class="profile-dropdown">
+                    <div class="drop-item">
+                        <div class="name-container">
+                            <div class="name-item">
+                                <div class="avatar-container">
+                                    <img src="{% static 'imagio_theme/img/placeholder/placeholder-person.jpg' %}">
+                                </div>
+                            </div>
+                            <div class="name-item">
+                                <div class="name">
+                                    <h4>{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                                </div>
+                                <div class="email">
+                                    <p>{{ request.user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drop-item">
+                        <ul>
+                            <li><form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" style="all:unset; cursor:pointer;">Logout</button>
+      </form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

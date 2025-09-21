@@ -1,0 +1,130 @@
+{% extends "main_view/templates/main_base.html" %}
+{% load i18n static view_files_main_view_template_tags %}
+{% block page_title %}
+<div class="block-item">
+    <h4>Dashboard</h4>
+</div>
+{% endblock %}
+{% block content %}
+<style>
+    #calendar {
+        max-width: 900px;
+        margin: 50px auto;
+    }
+</style>
+{% csrf_token %}
+<div id="home-page">
+    <section class="dashboard-section">
+        <div class="custom-container">
+            <div class="common-dashboard-container">
+                <div class="dashboard-row">
+                    <div class="dashboard-item">
+                        <div class="common-card-container type-1">
+                            <div class="card-inner">
+                                <div class="icon-container">
+                                    <i class="flaticon-bar-chart"></i>
+                                </div>
+                                <div class="amount">
+                                    <h2 class="comma_separated">{{ counts.today }}</h2>
+                                </div>
+                                <div class="title">
+                                    <p>Total Booking</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="common-card-container type-2"
+                            style="background-image: url('{% static 'imagio_theme/img/pattern/pattern_2.svg' %}')">
+                            <div class="card-inner">
+                                <div class="icon-container">
+                                    <i class="flaticon-folder"></i>
+                                </div>
+                                <div class="amount">
+                                    <h2 class="comma_separated">{{ counts.month }}</h2>
+                                </div>
+                                <div class="title">
+                                    <p>This Month Booking</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="common-card-container type-3"
+                            style="background-image: url('{% static 'imagio_theme/img/pattern/pattern_3.svg' %}')">
+                            <div class="card-inner">
+                                <div class="icon-container">
+                                    <i class="flaticon-folder"></i>
+                                </div>
+                                <div class="amount">
+                                    <h2 class="comma_separated">{{ counts.total }}</h2>
+                                </div>
+                                <div class="title">
+                                    <p>Total Booking</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="custom-container">
+            <div class="section-content">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success"> {{ message}} </div>
+                {% endfor %}
+                {% endif %}
+                <div class="common-content-box">
+                    <div class="common-table">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            timeZone: 'Asia/Kathmandu',
+            initialView: 'dayGridMonth',
+            selectable: true,
+            editable: false,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            events: {
+                url: "{% url 'booking_events' %}",
+                method: "GET",
+                failure: function () {
+                    alert('There was an error while fetching events!');
+                }
+            },
+            // select: function (info) {
+            //     const title = prompt('Enter Event Title (demo only – not saved):');
+            //     if (title) {
+            //         calendar.addEvent({
+            //             title: title,
+            //             start: info.startStr,
+            //             end: info.endStr,
+            //             allDay: info.allDay
+            //         });
+            //     }
+            //     calendar.unselect();
+            // },
+            eventClick: function (info) {
+            },
+        });
+        calendar.render();
+    });
+</script>
+
+{% endblock %}

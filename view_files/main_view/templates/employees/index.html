@@ -1,0 +1,68 @@
+{% extends "main_base.html" %}
+
+
+{% load static %}
+
+{% block title %}Employees{% endblock %}
+
+{% block content %}
+<div class="common-container">
+    <div class="common-content-box">
+        <div class="common-title type-line"><h4>All Employees</h4></div>
+
+        <div class="text-end mb-2">
+            <a href="{% url 'admin_add_employee' %}" class="co-btn">Add Employee</a>
+        </div>
+
+        <table id="employee-table" class="table table-striped table-bordered w-100">
+            <thead>
+                <tr>
+                    <th>SN</th>
+                    <th>Full Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Outlet</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function(){
+    var table = $('#employee-table').DataTable({
+        ajax: "{% url 'admin_employees_index' %}",
+        columns: [
+            { data: null, render: (data, type, row, meta) => meta.row + 1 },
+            { data: 'full_name' },
+            { data: 'gender' },
+            { data: 'email' },
+            { data: 'phone_number' },
+            { data: 'role' },
+            { data: 'outlet' },
+            { data: 'id', render: (data, type, row) => `
+                <ul class="type-action">
+                    <li><a href="{% url 'admin_add_employee' %}?id=${data}"><i class="fas fa-edit"></i></a></li>
+                    <li><a href="javascript:void(0)" onclick="deleteEmployee(${data})"><i class="fas fa-trash"></i></a></li>
+                </ul>
+            ` }
+        ]
+    });
+});
+
+function deleteEmployee(id){
+    if(confirm("Are you sure you want to delete this employee?")){
+        $.post("{% url 'admin_employees_delete' id=0 %}".replace('0', id), {csrfmiddlewaretoken: '{{ csrf_token }}'}, function(){
+            $('#basic-datatable').DataTable().ajax.reload();
+        });
+    }
+}
+
+</script>
+{% endblock %}

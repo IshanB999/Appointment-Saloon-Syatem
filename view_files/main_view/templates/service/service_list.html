@@ -1,0 +1,33 @@
+{% extends "main_base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<h3>Set Services for {{ outlet.name }}</h3>
+<form method="POST">
+    {% csrf_token %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Select</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>
+                    <input type="checkbox" name="service_{{ service.id }}" {% if service.id in existing_prices %}checked{% endif %}>
+                </td>
+                <td>
+                    <input type="number" name="price_{{ service.id }}" step="0.01" value="{{ existing_prices|get_item:service.id|default:100 }}">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'admin_service_index' %}" class="btn btn-default">Cancel</a>
+</form>
+{% endblock %}

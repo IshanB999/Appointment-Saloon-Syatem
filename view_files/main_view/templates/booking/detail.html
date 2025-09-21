@@ -1,0 +1,126 @@
+{% extends "main_base.html" %}
+{% load i18n static %}
+{% block template_css %}{% endblock %}
+{% block title %}{{ title|default:"Booking Details" }}{% endblock %}
+{% block page_title %}
+<div class="block-item">
+    <h4>Booking Details</h4>
+</div>
+{% endblock %}
+{% block content %}
+<div id="common-list-page">
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                {# flash messages #}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                <div class="common-content-box">
+                    <!-- Booking Info -->
+                    <div class="common-table">
+                        <h5 class="mb-3">Booking Info</h5>
+                        <table id="booking-info" class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th style="width:220px;">Booking ID</th>
+                                    <td>#{{ booking.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <td>{{ booking.full_name|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ booking.email|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mobile No</th>
+                                    <td>{{ booking.mobile_no|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Outlet</th>
+                                    <td>
+                                        {% if booking.outlet %}
+                                        <strong>{{ booking.outlet.name|default:"—" }}</strong>
+                                        {% if booking.outlet.address %}
+                                        <br><small>{{ booking.outlet.address }}</small>
+                                        {% endif %}
+                                        {% if booking.outlet.phone or booking.outlet.mobile %}
+                                        <br><small>
+                                            {% if booking.outlet.phone %}☎ {{ booking.outlet.phone }}{% endif %}
+                                            {% if booking.outlet.mobile %}{% if booking.outlet.phone %} / {% endif %}📱
+                                            {{ booking.outlet.mobile }}{% endif %}
+                                        </small>
+                                        {% endif %}
+                                        {% else %}
+                                        —
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <td>{{ booking.booking_date|date:"F j, Y"|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Time</th>
+                                    <td>{{ booking.booking_time|time:"H:i"|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>{{ booking.status|default:"pending" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Message</th>
+                                    <td>{{ booking.booking_message|linebreaksbr|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Created</th>
+                                    <td>{{ booking.created_at|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Updated</th>
+                                    <td>{{ booking.updated_at|date:"Y-m-d H:i" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Services -->
+                    <div class="common-table mt-4">
+                        <h5 class="mb-3">Selected Services</h5>
+                        <table id="basic-datatable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width:70px;">SN</th>
+                                    <th>Service Name</th>
+                                    <th style="width:180px;">Code</th>
+                                    <th style="width:180px;">Gender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if services %}
+                                {% for s in services %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ s.name|default:"—" }}</td>
+                                    <td>{{ s.code|default:"—" }}</td>
+                                    <td>{{ s.gender|default:"—" }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No services selected.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

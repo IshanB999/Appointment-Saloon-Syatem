@@ -1,0 +1,114 @@
+{% extends "main_base.html" %}
+{% load custom_filters %}
+
+{% block template_css %}
+{% endblock %}
+
+{% block title %}
+Set Services for {{ outlet.name }}
+{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>Manage Services for {{ outlet.name }}</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="common-list-page">
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="common-content-box">
+                    <div class="common-table">
+                        <div class="title-container">
+                            <div class="title-item">
+                                <div class="inner-item">
+                                    <a href="{% url 'admin_outlet_index' %}" class="co-btn">Back to Outlets</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="POST">
+                            {% csrf_token %}
+                            <table id="basic-datatable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Select</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for service in services %}
+                                    <tr>
+                                        <td>{{ service.name }}</td>
+                                        <td>
+                                            <input type="checkbox" class="service-checkbox" name="service_{{ service.id }}"
+                                                   data-service-id="{{ service.id }}"
+                                                   {% if service.id in existing_prices %}checked{% endif %}>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="price_{{ service.id }}" step="0.01"
+                                                   class="service-price" data-service-id="{{ service.id }}"
+                                                   {% if service.id in existing_prices %}
+                                                   value="{{ existing_prices|get_item:service.id }}"
+                                                   {% else %}
+                                                   disabled
+                                                   {% endif %}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Enable/disable price input based on checkbox
+    const checkboxes = document.querySelectorAll(".service-checkbox");
+    
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener("change", function() {
+            const serviceId = this.getAttribute("data-service-id");
+            const priceInput = document.querySelector(`.service-price[data-service-id="${serviceId}"]`);
+            
+            if (this.checked) {
+                priceInput.disabled = false;
+                priceInput.focus();
+            } else {
+                priceInput.disabled = true;
+                priceInput.value = "";
+            }
+        });
+    });
+
+    // Optional: filter table search
+    const filterSearch = document.querySelector('[data-ic-filter="search"]');
+    filterSearch.addEventListener("keyup", function(e) {
+        const term = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll("#basic-datatable tbody tr");
+        rows.forEach(function(row) {
+            const serviceName = row.querySelector("td:first-child").textContent.toLowerCase();
+            row.style.display = serviceName.includes(term) ? "" : "none";
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% block template_css %}
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+<link rel="stylesheet"
+    href="{% static '/vendor/datatables.net-fixedheader-bs4/dataTables.fixedheader.bootstrap4.css' %}">
+<link rel="stylesheet"
+    href="{% static '/vendor/datatables.net-fixedcolumns-bs4/dataTables.fixedcolumns.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-rowgroup-bs4/dataTables.rowgroup.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-scroller-bs4/dataTables.scroller.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-select-bs4/dataTables.select.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-responsive-bs4/dataTables.responsive.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-buttons-bs4/dataTables.buttons.bootstrap4.css' %}">
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block header %}
+<h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{% trans "Assign User Permission" %}</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+<span class="h-20px border-gray-300 border-start mx-4"></span>
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    <li class="breadcrumb-item text-muted">
+        <a href="{% url 'member_home' %}" class="text-muted text-hover-primary">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <!--<li class="breadcrumb-item text-muted">{% trans "Products" %}</li>-->
+    <li class="breadcrumb-item text-dark">{% trans "Assign User Permission" %}</li>
+</ul>
+{% endblock %}
+
+{% block action %}
+{% if perms.auth.view_group %}
+<a href="JavaScript:void(0)" id="save-permission" class="btn btn-primary">Submit</a>
+<a href="{% url 'system_groups' %}" class="btn light">Cancel</a>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Container-->
+    <div class="container-xxl" id="kt_content_container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success"> {{ message}} </div>
+        {% endfor %}
+        {% endif %}
+        <!--begin::Tables Widget 9-->
+        <div class="card mb-5 mb-xl-8">
+            <!--begin::Header-->
+            <div class="card-header border-0 pt-5">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label fw-bolder fs-3 mb-1">{% trans "Assign User Permission" %}</span>
+                </h3>
+            </div>
+            <!--end::Header-->
+            <!--begin::Body-->
+            <div class="card-body py-3">
+                <!--begin::Table container-->
+                <div class="table-responsive">
+                    <!--begin::Table-->
+                    <table id="basic-datatable"
+                        class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                        <thead>
+                            <tr>
+                                <th>{% trans "SN" %}</th>
+                                <th>{% trans "Module" %}</th>
+                                <th>{% trans "Permissions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <form method="POST" action="{% url 'system_assign_user_permission_save' %}"
+                                id="assign_permission-form">
+                                {% for content in content_type %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ content.app_label }}</td>
+                                    <td>
+                                        <table class="table ">
+                                            {% for perm in content.permission_set.all %}
+                                            <tr>
+                                                {% if perm.id in row %}
+                                                <td><input type="checkbox" name="permission_id[]" value="{{ perm.id }}"
+                                                        id="prmission-{{ perm.id }}" checked></td>
+                                                {% else %}
+                                                <td><input type="checkbox" name="permission_id[]" value="{{ perm.id }}"
+                                                        id="prmission-{{ perm.id }}"></td>
+                                                {% endif %}
+
+                                                <td><label for="prmission-{{ perm.id }}">{{ perm.name }}</label></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ user_id }}">
+                            </form>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('#save-permission').click(function () {
+        $('#assign_permission-form').submit();
+    })
+</script>
+{% endblock %}

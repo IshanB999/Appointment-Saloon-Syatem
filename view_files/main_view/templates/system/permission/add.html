@@ -1,0 +1,179 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% url 'system_permission' as system_permission %}
+{% url 'system_groups_save' as system_groups_save %}
+{% block template_css %}
+<link rel="stylesheet" href="{% static '/css/formValidation.min.css' %}">
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block header %}
+<h1 class="page-title">{% trans "Permission" %}</h1>
+{% endblock %}
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'member_home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'system_permission' %}">{% trans "Permission" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Permission Add" %}</li>
+</ol>
+{% endblock %}
+
+{% block action %}
+<div class="page-header-actions">
+    <a href="javascript:void(0)" type="button" id="save-permission" class="btn btn-icon btn-primary btn-outline "
+        title="Save"><i class="icon wb-add-file" aria-hidden="true"></i></a>
+    <a href="{% url 'system_permission' %}" type="button" class="btn btn-icon btn-default btn-outline "
+        title="Cancel"><i class="icon wb-arrow-left" aria-hidden="true"></i></a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="panel">
+    <div class="panel-body container-fluid">
+        <form method="POST" action="{% url 'system_permission_save' %}" id="permission-form">
+            {% csrf_token %}
+            <div class="row row-lg">
+                <div class="col-md-12 col-lg-12">
+                    <!-- Example Input Focus -->
+                    <div class="fv-row form-group">
+                        <label for="name">{% trans 'Name' %}</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="{% trans 'Name' %}"
+                            required>
+                    </div>
+
+                    <div class="fv-row form-group">
+                        <label for="module">{% trans 'Module' %}</label>
+                        <input type="text" class="form-control" id="module" name="module"
+                            placeholder="{% trans 'Module' %}" required>
+                    </div>
+                    <!-- End Example Input Focus -->
+                    <hr>
+                    <h3>{% trans 'Permissions' %}</h3>
+                    <table style="width: 100% !important" class="table table-hover table-bordered">
+                        <tr>
+                            <th>{% trans 'Permission Name' %}</th>
+                            <th></th>
+                        </tr>
+                        <tr class="available-for-clone">
+                            <td>
+                                <div class='fv-row form-group'>
+                                    <input type='text' class='form-control' id="permission_1" name='permission[]'
+                                        required>
+                                </div>
+                            </td>
+
+                            <td class="add-btn-more">
+                                <button type="button" class="btn btn-primary clone-me" style=" "><i
+                                        class="icon wb-plus"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/validator/FormValidation.full.min.js' %}"></script>
+<script src="{% static 'js/validator/plugins/Bootstrap5.min.js' %}"></script>
+<script type="text/javascript">
+    const form = document.getElementById('permission-form');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'name': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The Name field is required'
+                        }
+                    }
+                },
+
+                'module': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The Module field is required'
+                        }
+                    }
+                },
+                'permission[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The permission field is required'
+                        }
+                    }
+                },
+            },
+            err: {
+                clazz: 'invalid-feedback'
+            },
+            control: {
+                // The CSS class for valid control
+                valid: 'is-valid',
+                // The CSS class for invalid control
+                invalid: 'is-invalid'
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('save-permission');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (validator) {
+            validator.validate().then(function (status) {
+                if (status == 'Valid') {
+                    save_form();
+                }
+            });
+        }
+    });
+
+    function save_form() {
+        $('#permission-form').submit()
+    }
+
+
+    var regex = /^(.+?)(\d+)$/i;
+    var cloneIndex = 2;
+    $(function () {
+        $(document).on('click', '.clone-me', function () {
+            var currentDiv = $(".available-for-clone");
+            var cloned = currentDiv.clone();
+            cloned.find('input').val('');
+            cloned.find('.clone-quantity-class').html('');
+            cloned.find("*").each(function () {
+                var id = this.id || "";
+                var match = id.match(regex) || [];
+                if (match.length == 3) {
+                    this.id = match[1] + (cloneIndex);
+                }
+            });
+            cloneIndex++;
+            cloned.removeClass('available-for-clone').addClass('cloned');
+            cloned.insertAfter(currentDiv);
+            cloned.find('.add-btn-more').removeClass('clone-me').addClass('unclone-me');
+            cloned.find('.add-btn-more').html('<button class="btn btn-danger" type="button"><i class="icon wb-minus"></i></button>');
+            validator.revalidateField('permission[]');
+        });
+        $(document).on('click', '.unclone-me', function () {
+            $(this).parents('.cloned').remove();
+        });
+    })
+</script>
+{% endblock %}

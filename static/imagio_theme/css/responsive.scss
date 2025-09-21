@@ -1,0 +1,1186 @@
+/**
+ * Created by Sushant Gauchan
+ * Email : sushant@imagiocreations.com
+*/
+
+@import "components/fonts_and_colors";
+
+/*------------------------------------ Site Wide Starts -----------------------------------*/
+/*------------------------------------- Site Wide Ends ------------------------------------*/
+
+/*--------------------------------- Header Wrapper Starts ---------------------------------*/
+/*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+/*----------------------------------- Navigation Starts -----------------------------------*/
+/*------------------------------------ Navigation Ends ------------------------------------*/
+
+/*-------------------------------- Content Wrapper Starts ---------------------------------*/
+/*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+/*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+/*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+/*----------------------------------- Components Starts -----------------------------------*/
+/*------------------------------------ Components Ends ------------------------------------*/
+
+/*---------------------------------- Slick Slider Starts ----------------------------------*/
+/*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+/*-------------------------------------- Modal Starts -------------------------------------*/
+/*--------------------------------------- Modal Ends --------------------------------------*/
+
+/*------------------------------------ Animation Starts -----------------------------------*/
+/*------------------------------------- Animation Ends ------------------------------------*/
+
+
+@media all and (max-width: 1800px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper{
+
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+    #login-page .login-section .login-container {
+      width: 420px;
+      padding: 60px 50px;
+    }
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-layout-container{
+    .layout-item{
+      &:nth-of-type(1) {
+        /*width: 500px;*/
+      }
+      &:nth-of-type(2) {
+        /*width: calc(100% - 500px);*/
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+}
+
+@media all and (max-width: 1580px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+
+
+  h2 {
+    font-size: 22px;
+  }
+  h4 {
+    font-size: 15px;
+  }
+  .custom-container {
+    padding: 40px 25px;
+  }
+
+  #header-wrapper{
+    width: 220px;
+  }
+  #content-wrapper{
+    padding-left: 220px;
+  }
+  .common-header-section.type-bottom,
+  #footer-wrapper{
+    width: calc(100% - 220px);
+    left: 220px;
+  }
+  #header-wrapper .sidebar-container .sidebar-item.type-header,
+  .common-header-section .header-item{
+    height: 65px;
+  }
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper{
+    .sidebar-container{
+      .sidebar-item{
+        .nav-container{
+          .nav-item{
+            ul{
+              li{
+                a {
+                  font-size: 12px;
+                  padding: 11px 20px;
+                }
+                &.has-sub-menu{
+                  ul{
+                    li{
+                      a{
+                        padding-left: 35px;
+                        padding-top: 15px;
+                        padding-bottom: 15px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-dashboard-container{
+    .dashboard-row{
+      .dashboard-item {
+        padding: 6px;
+      }
+    }
+  }
+  .common-card-container{
+    .card-inner {
+      padding: 25px 35px;
+      .icon-container i {
+        font-size: 18px;
+      }
+      .amount h2 {
+        margin: 12px 0 10px;
+      }
+      .title p {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .common-header-section{
+    .header-item{
+      .block-container{
+        .block-item{
+          .sub-text{
+            ul{
+              li {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .common-logo-container{
+    a{
+      width: 35px;
+    }
+    &.type-lg{
+      a{
+
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+}
+
+@media all and (max-width: 1399px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+  h2 {
+    font-size: 20px;
+  }
+
+  .co-btn {
+    min-width: 125px;
+    padding: 17px 20px;
+    font-size: 10px;
+  }
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper{
+
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-dashboard-container{
+    .dashboard-row{
+      &.type-custom{
+        .dashboard-item{
+          &.cu-3 {
+            width: 40%;
+          }
+          &.cu-6 {
+            width: 60%;
+          }
+        }
+      }
+    }
+  }
+  .common-card-container {
+    .card-inner {
+      padding: 24px 20px;
+
+      .card-content {
+        .chart-label {
+          ul {
+            li {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .common-header-section{
+    .header-item{
+      .block-container{
+        .block-item{
+          &.type-nav{
+            ul{
+              li{
+                &>a {
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .common-table{
+    table{
+      tr{
+        td {
+          font-size: 11px;
+        }
+      }
+    }
+
+    &.type-dashboard{
+      table{
+        thead{
+          tr{
+            td{
+              font-size: 11px;
+              letter-spacing: 1px;
+              height: 45px;
+            }
+          }
+        }
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+
+  /*------------------------------------ Animation Starts -----------------------------------*/
+  /*------------------------------------- Animation Ends ------------------------------------*/
+}
+
+@media all and (max-width: 1199px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+  body {
+    font-size: 13px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  h4 {
+    font-size: 14px;
+  }
+  h5 {
+    font-size: 12px;
+  }
+
+  #header-wrapper {
+    width: 200px;
+  }
+  #content-wrapper {
+    padding-left: 200px;
+  }
+  .common-header-section.type-bottom, #footer-wrapper {
+    width: calc(100% - 200px);
+    left: 200px;
+  }
+
+  .co-btn{
+    font-size: 10px;
+    padding: 15px 20px;
+    min-width: 105px;
+    letter-spacing: 1px;
+    .type-small {
+      padding: 10px 12px 8px;
+    }
+  }
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper{
+    .sidebar-container{
+      .sidebar-item{
+        .nav-container{
+          .nav-item{
+            &:not(:last-of-type) {
+              margin-bottom: 10px;
+              padding-bottom: 10px;
+            }
+
+            ul{
+              li{
+                a{
+                  font-size: 12px;
+                  padding: 10px 20px;
+                }
+                &.has-sub-menu{
+                  &>ul {
+                    min-width: 165px;
+                  }
+                  ul{
+                    li{
+                      a{
+                        padding-left: 20px;
+                        padding-top: 12px;
+                        padding-bottom: 12px;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+    #login-page{
+      .login-section{
+        .login-container {
+          width: 435px;
+          padding: 60px 50px;
+        }
+      }
+    }
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-dashboard-container{
+    .dashboard-row {
+      flex-wrap: wrap;
+      &.type-custom{
+        .dashboard-item{
+          &.cu-3{
+            width: 100%;
+          }
+          &.cu-6{
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  .common-card-container{
+    .card-inner{
+      padding: 20px 20px;
+      .card-title {
+        margin-bottom: 15px;
+      }
+
+      .title{
+        p{
+          font-size: 10px;
+        }
+      }
+
+
+
+      .amount{
+        h2{
+          margin: 10px 0 8px;
+        }
+      }
+    }
+
+    &.type-contact{
+      .card-inner{
+        .card-content{
+          ul{
+            &:nth-of-type(1) {
+              padding-right: 9px;
+            }
+            li {
+              font-size: 11px;
+              &:not(:last-of-type) {
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+              }
+              span{
+                &:nth-of-type(1) {
+                  font-size: 9px;
+                  margin-bottom: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .common-layout-container{
+    .layout-item{
+      &:nth-of-type(1) {
+        width: 100%;
+      }
+      &:nth-of-type(2) {
+        width: 100%;
+      }
+      &:not(:last-of-type){
+        margin-bottom: 30px;
+      }
+    }
+    &.type-large{
+      .layout-item{
+        &:nth-of-type(1){
+          width: calc(100% - 280px);
+        }
+        &:nth-of-type(2){
+          width: 280px;
+        }
+      }
+    }
+  }
+  .common-header-section{
+    .header-item{
+      .block-container{
+        .block-item{
+          .sub-text{
+            ul{
+              li{
+                span{
+                  color: #fff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .common-content-box{
+    .list-container{
+      .list-item{
+        ul{
+          li {
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
+  .common-chart-container{
+    .stats-container {
+      margin-bottom: 10px;
+    }
+  }
+
+  .common-table{
+    &.type-dashboard{
+      table{
+        tr{
+          td{
+            font-size: 11px;
+            height: 55px;
+          }
+        }
+      }
+    }
+  }
+  .common-form{
+    .fields{
+      .form-group,.common-title{
+        label{
+          font-size: 11px;
+          padding-bottom: 8px;
+        }
+        input,textarea,.select2 .select2-selection{
+          font-size: 11px;
+          padding: 10px 12px;
+        }
+      }
+    }
+
+    &.type-table{
+      .fields{
+        .form-group-wrapper{
+          .form-group{
+            .select, .select2 .select2-selection {
+              min-width: 95px;
+            }
+            .icon-container {
+              width: 20px;
+              left: 9px;
+            }
+            &.type-icon{
+              input {
+                width: 225px;
+              }
+              &.type-right{
+                .icon-container {
+                  right: 8px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.type-filter{
+      .fields{
+        .form-group-wrapper{
+          .form-group{
+            &:not(:last-of-type) {
+              margin-right: 5px;
+            }
+            input, .select2 .select2-selection{
+              width: 185px;
+            }
+          }
+        }
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+
+  /*------------------------------------ Animation Starts -----------------------------------*/
+  /*------------------------------------- Animation Ends ------------------------------------*/
+}
+
+@media all and (max-width: 991px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+  h3 {
+    font-size: 18px;
+  }
+
+  body{
+    &.nav-open{
+      #header-wrapper {
+        left: 0%;
+        transition: all .6s ease;
+      }
+    }
+  }
+
+  #header-wrapper {
+
+  }
+  #content-wrapper {
+    padding-left: 0;
+  }
+  .common-header-section.type-bottom, #footer-wrapper{
+    width: 100%;
+    left: 0;
+  }
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper {
+    z-index: 12;
+    width: 250px;
+    position: fixed;
+    left: -100%;
+    transition: all .6s ease;
+  }
+  #mobile-nav-wrapper{
+    z-index: 9;
+    display: block;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    background-color: $primary-color;
+    border-top: 1px solid #5a847c;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+    ul{
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      li{
+        width: 25%;
+        color: #fff;
+        line-height: 1em;
+        a{
+          display: block;
+          color: inherit;
+          line-height: inherit;
+        }
+        .inner{
+          height: 100%;
+          padding: 14px 15px;
+          line-height: inherit;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          img{
+            height: 18px;
+            width: auto;
+          }
+          i{
+            font-size: 20px;
+          }
+          p{
+            font-size: 10px;
+            margin-top: 7px;
+          }
+        }
+      }
+    }
+  }
+
+  body{
+    &.menu-open{
+      #header-wrapper{
+        left: 0;
+        transition: all .6s ease;
+      }
+    }
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+    #login-page{
+      .login-section{
+        .login-container {
+          width: 390px;
+          padding: 50px 40px;
+          .title{
+            .content {
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-dashboard-container{
+    .dashboard-row{
+      &.type-half{
+        .dashboard-item{
+
+        }
+      }
+    }
+  }
+  .common-header-section{
+    background-color: #1e1e2d;
+    .header-item{
+      .block-container{
+        .block-item{
+          &.type-logo{
+            &.type-logo{
+              display: flex;
+              align-items: center;
+            }
+          }
+        }
+      }
+      .block-container{
+        h4{
+          color: #fff;
+        }
+
+        .block-item{
+          &.type-controls{
+            .navigation-container{
+              .navigation-item{
+                &>ul{
+                  &>li{
+                    a{
+                      color: #a6b0be;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+
+  /*------------------------------------ Animation Starts -----------------------------------*/
+  /*------------------------------------- Animation Ends ------------------------------------*/
+}
+
+@media all and (max-width: 767px) {
+  /*------------------------------------ Site Wide Starts -----------------------------------*/
+  h3 {
+    font-size: 16px;
+  }
+
+  #wrapper{
+    position: relative;
+    padding-bottom: 67px;
+  }
+  /*------------------------------------- Site Wide Ends ------------------------------------*/
+
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+  #header-wrapper{
+    .sidebar-container{
+      .sidebar-item{
+        .nav-container{
+          .nav-item{
+            ul{
+              li{
+                &.has-sub-menu{
+                  &>a:after{
+                    display: none !important;
+                  }
+                  &>ul {
+                    max-height: 0;
+                    overflow: hidden;
+
+                    position: relative;
+                    left: 0;
+                    top: 0;
+                    opacity: 1;
+                    transition: max-height .4s ease;
+                  }
+                }
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /*--------------------------------- Header Wrapper Starts ---------------------------------*/
+
+  /*----------------------------------- Navigation Starts -----------------------------------*/
+  #side-drawer {
+    width: 340px;
+  }
+  /*------------------------------------ Navigation Ends ------------------------------------*/
+
+  /*-------------------------------- Content Wrapper Starts ---------------------------------*/
+  #content-wrapper{
+    padding-bottom: 0;
+    #login-page{
+      .back-container{
+        right: 25px;
+      }
+
+      .login-section{
+        width: 100%;
+        .login-container {
+          width: 100%;
+          padding: 35px 25px;
+          .title{
+            margin-bottom: 25px;
+            .content {
+              margin-top: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+  /*--------------------------------- Content Wrapper Ends ----------------------------------*/
+
+  /*--------------------------------- Footer Wrapper Starts ---------------------------------*/
+  #footer-wrapper{
+    position: relative;
+    display: none;
+  }
+  /*---------------------------------- Footer Wrapper Ends ----------------------------------*/
+
+
+  /*----------------------------------- Components Starts -----------------------------------*/
+  .common-layout-container{
+    &.type-large{
+      .layout-item{
+        &:nth-of-type(1) {
+          width: 100%;
+        }
+        &:nth-of-type(2) {
+          width: 100%;
+        }
+      }
+    }
+    &.type-reverse{
+      .layout-item{
+        &:nth-of-type(1){
+          width: 100%;
+        }
+        &:nth-of-type(2){
+          width: 100%;
+        }
+      }
+    }
+  }
+  .common-dashboard-container{
+    .dashboard-row{
+      .dashboard-item {
+        width: 100%;
+      }
+      &.type-half{
+        .dashboard-item {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .common-header-section{
+    .header-item{
+      .block-container{
+        margin: 0 -6px;
+        .block-item {
+          padding: 0 6px;
+          &.type-controls{
+            .navigation-container{
+              .navigation-item{
+                &:last-of-type{
+                  display: none;
+                }
+              }
+            }
+          }
+          &.type-nav{
+            ul{
+              li{
+                &.has-drop-down{
+                  &.menu-active{
+                    .dropdown-container {
+                      opacity: 1;
+                      pointer-events: initial;
+                      transition: opacity 0.4s ease;
+                    }
+                  }
+                }
+                .dropdown-container {
+                  width: 150px;
+                  left: initial;
+                  right: 0;
+                  ul{
+                    padding: 10px 0;
+                  }
+                  &:after{
+                    left: initial;
+                    right: 18px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .common-card-container{
+    .card-inner{
+      .card-content{
+        .chart-label{
+          ul{
+            flex-wrap: wrap;
+            li{
+              width: 50%;
+              &:not(:last-of-type) {
+                margin-right: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .common-content-box{
+    .filter-container {
+      position: relative;
+      display: block;
+      .filter-item{
+        ul{
+          li{
+            a{
+              font-size: 12px;
+              i{
+                font-size: 15px;
+                margin-right: 3px;
+                bottom: -1px;
+              }
+            }
+          }
+        }
+
+        &:nth-of-type(2){
+          position: absolute;
+          top: -28px;
+          right: 0;
+        }
+      }
+    }
+    .list-container{
+      .list-item{
+        ul{
+          margin: -8px -5px;
+          li{
+            padding: 8px 5px;
+            a {
+              font-size: 9px;
+              letter-spacing: 1px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .common-mobile-drawer{
+    z-index: 13;
+    display: block;
+    position: fixed;
+    bottom: -120%;
+    left: 0;
+    right: 0;
+    background-color: $primary-color;
+    border-top: 1px solid #5a847c;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;
+    transition: all .8s ease;
+    &.open {
+      bottom: 0;
+      transition: all .6s ease;
+    }
+    .card-inner{
+      padding: 25px 20px 40px 20px;
+      .card-item{
+        &:not(:last-of-type){
+          margin-bottom: 20px;
+          padding-bottom: 20px;
+          border-bottom: 1px solid #7c9d97;
+        }
+        .title{
+          margin-bottom: 16px;
+          h4{
+            font-size: 11px;
+            color: #79afa5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+        }
+
+        .content{
+          ul{
+            margin: -8px 0;
+            li{
+              color: #fff;
+              a{
+                display: flex;
+                align-items: center;
+                padding: 8px 0;
+                color: inherit;
+              }
+              img{
+                height: 17px;
+                margin-right: 8px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .common-table{
+    overflow-y: hidden;
+    &.type-list{
+
+    }
+    .title-container{
+      .title-item{
+
+      }
+    }
+  }
+  .common-form{
+    &.type-table{
+      .fields{
+        .form-group-wrapper{
+          .form-group{
+            .icon-container {
+              width: 17px;
+              left: 6px;
+            }
+
+            &.type-icon{
+              input{
+                width: 160px;
+              }
+              &.type-left{
+                input {
+                  padding-left: 30px;
+                }
+              }
+            }
+            input,  select, .select2 .select2-selection{
+              height: 40px;
+              padding: 16px 16px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+    &.type-filter{
+      display: block;
+      .fields{
+        .form-group-wrapper{
+          margin: 0 -5px;
+          .form-group{
+            &:not(:last-of-type) {
+              margin-right: 0px;
+            }
+            input, .select2 .select2-selection {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .form-action {
+        margin-left: 0;
+        margin-top: 10px;
+        .co-btn{
+          width: 100%;
+        }
+      }
+    }
+
+    .fields{
+      .form-group,.common-title{
+        &.half-width{
+          width: 100%;
+        }
+      }
+    }
+  }
+  /*------------------------------------ Components Ends ------------------------------------*/
+
+  /*---------------------------------- Slick Slider Starts ----------------------------------*/
+  /*----------------------------------- Slick Slider Ends -----------------------------------*/
+
+  /*-------------------------------------- Modal Starts -------------------------------------*/
+  .modal .modal-dialog {
+    max-width: calc(100% - 60px);
+  }
+  /*--------------------------------------- Modal Ends --------------------------------------*/
+
+  /*------------------------------------ Animation Starts -----------------------------------*/
+  /*------------------------------------- Animation Ends ------------------------------------*/
+
+
+}
+
+
+

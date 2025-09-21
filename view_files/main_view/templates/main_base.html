@@ -1,0 +1,142 @@
+{% load i18n static view_files_main_view_template_tags %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!--Niroj Prajapati-->
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <!------------------------ Meta Starts ---------------------->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="">
+
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:image:alt" content="">
+    <meta property="og:description" content="">
+
+    <meta name="theme-color" content="#ffffff">
+    <!------------------------- Meta Ends ----------------------->
+
+    <!----------------------- Fonts Starts ---------------------->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!------------------------ Fonts Ends ----------------------->
+
+    <!---------------------- Vendors Starts --------------------->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <!----------------------- Vendors Ends ---------------------->
+
+    <!-------------------- Components Starts -------------------->
+    <link href="{% static 'imagio_theme/css/bowercomponent/flaticon.css' %}?v=1.0.2" rel="stylesheet">
+    <link href="{% static 'imagio_theme/js/bowercomponent/datatables/datatables.bundle.css' %}" rel="stylesheet">
+    <link href="{% static 'imagio_theme/css/bowercomponent/custom_charts.min.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{% static 'vendor/redactor/redactor.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.21.1/tagify.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <!--------------------- Components Ends --------------------->
+
+
+    <!-------------------- Site Style Starts -------------------->
+    <link href="{% static 'imagio_theme/css/global.min.css' %}?v=1.0.1" rel="stylesheet">
+    <link href="{% static 'imagio_theme/css/thestyles.min.css' %}?v=1.0.1" rel="stylesheet">
+    <link href="{% static 'imagio_theme/css/responsive.min.css' %}?v=1.0.1" rel="stylesheet">
+    <!--------------------- Site Style Ends --------------------->
+
+    <!---------------------- Jquery Start ----------------------->
+    <!--<script type="text/javascript" src="js/bowercomponent/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>&ndash;&gt;-->
+
+    <script type="text/javascript"
+        src="{% static 'imagio_theme/js/theme_js/plugins/global/plugins.bundle.js' %}"></script>
+    <script type="text/javascript" src="{% static 'imagio_theme/js/theme_js/js/scripts.bundle.js' %}"></script>
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script type="text/javascript" src="{% static 'vendor/redactor/redactor.min.js' %}"></script>
+    
+    <!----------------------- Jquery Ends ----------------------->
+    {% load i18n %}
+</head>
+
+<body>
+
+    <!------------------------------------- Wrapper Starts ------------------------------------->
+    <div id="wrapper">
+        <div class="common-overlay"></div>
+
+        <!-------------------------------------- Modal Starts -------------------------------------->
+
+        <!--------------------------------------- Modal Ends --------------------------------------->
+
+        <!--------------------------------- Header Wrapper Starts ---------------------------------->
+        {% include "header.html" %}
+        <!---------------------------------- Header Wrapper Ends ----------------------------------->
+
+        <!-------------------------------- Content Wrapper Starts ---------------------------------->
+        <div id="content-wrapper">
+            <section class="common-header-section">
+                <div class="header-item">
+                    <div class="block-container">
+                        {% block page_title %}
+                        {% endblock %}
+                        {% block user_navigation %}
+                        {% endblock %}
+                        {% include "menu.html" %}
+                    </div>
+                </div>
+            </section>
+            {% block content %}
+            {% endblock %}
+        </div>
+        <!--------------------------------- Content Wrapper Ends ----------------------------------->
+
+
+        <!--------------------------------- Footer Wrapper Starts ---------------------------------->
+        <footer id="footer-wrapper">
+            <div class="custom-container type-full">
+                <p>© 2018 - {% now 'Y'%} All Rights Reserved. Crafted by <a href="https://imagiocreations.com/"
+                        target="_blank">Imagio Creations</a> </p>
+            </div>
+        </footer>
+        <!---------------------------------- Footer Wrapper Ends ----------------------------------->
+    </div>
+    <!-------------------------------------- Wrapper Ends -------------------------------------->
+
+    <!---------------------- Vendors Starts --------------------->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.21.1/tagify.min.js"></script>
+    <!----------------------- Vendors Ends ---------------------->
+
+    <!-------------------- Components Starts -------------------->
+    <script type="text/javascript"
+        src="{% static 'imagio_theme/js/theme_js/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!--------------------- Components Ends --------------------->
+
+    <!------------------- Site Scripts Starts ------------------->
+    <script type="text/javascript" src="{% static 'imagio_theme/js/thescripts.js' %}?v=1.0.1"></script>
+
+
+    <!-------------------- Site Scripts Ends -------------------->
+    {% block js %}{% endblock js %}
+</body>
+
+</html>

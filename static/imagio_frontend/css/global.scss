@@ -1,0 +1,350 @@
+/**
+ * Created by Sushant Gauchan
+ * Email : sushant.gauchan@gmail.com
+*/
+
+@import "components/fonts_and_colors";
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@font-face {
+  font-family: 'Roxborough CF';
+  src: url('../fonts/RoxboroughCF-Light.woff2') format('woff2'),
+  url('../fonts/RoxboroughCF-Light.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roxborough CF';
+  src: url('../fonts/RoxboroughCF-RegularItalic.woff2') format('woff2'),
+  url('../fonts/RoxboroughCF-RegularItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quentin';
+  src: url('../fonts/Quentin.woff2') format('woff2'),
+  url('../fonts/Quentin.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html{
+  height: 100%;
+}
+
+body{
+  height: 100%;
+  font-family: $font-type-1;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8em;
+  color: $black-color;
+  background-color: $background-color-cream;
+
+  display: block;
+  padding: 0px;
+  margin: 0px;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a{
+  &:link,&:visited{
+    text-decoration: none
+  }
+  &:focus{
+    outline: none
+  }
+}
+
+::-moz-selection { /* Code for Firefox */
+  color: #757774;
+  background-color: #e8e0cf;
+}
+
+::selection {
+  color: #757774;
+  background-color: #e8e0cf;
+}
+
+h1, h2, h3, h4, h5, h6{
+  font-family: $font-type-2;
+  padding: 0;
+  margin: 0;
+}
+
+.h1-font h1,.h1-font{
+  font-size: 120px;
+}
+h1{
+  font-size: 64px;
+}
+h2 {
+  font-size: 40px;
+}
+h3{
+  font-size: 38px;
+}
+h4{
+  font-size: 36px;
+}
+h5{
+  font-size: 26px;
+}
+h6{
+  font-size: 10px;
+}
+
+
+p{
+  margin-bottom: 18px;
+  &:last-of-type{
+    margin-bottom: 0;
+  }
+}
+
+ul{
+  margin: 0;
+  padding: 0;
+  li{
+    list-style: none;
+  }
+}
+
+
+#wrapper{
+  min-height: 100%;
+  position: relative;
+}
+
+.slick-slider{
+  .slick-slide{
+    outline: none;
+  }
+}
+
+.custom-container{
+  padding: 160px 220px;
+  max-width: 1920px;
+  margin: auto;
+  &.type-small-side-padding{
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  &.small-width-container{
+    max-width: 1170px;
+  }
+  &.medium-width-container{
+    max-width: 1175px;
+  }
+  &.full-width{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  &.remove-top-padding{
+    padding-top: 0;
+  }
+  &.remove-bottom-padding{
+    padding-bottom: 0;
+  }
+  &.remove-top-bottom-padding{
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+.add-padding-left{
+  padding-left: 220px;
+}
+
+
+.section-title{
+  margin-bottom: 66px;
+  .content{
+    display: inline-block;
+    max-width: 700px;
+    margin-top: 30px;
+    &.content-font-sm{
+      p{
+        font-size: 16px;
+        line-height: 1.6em;
+      }
+    }
+
+    &.content-wd-full{
+      max-width: 1230px;
+    }
+    &.content-margin-sm{
+      margin-top: 20px;
+    }
+    &.content-color-light{
+      p{
+        color: $black-color-light;
+      }
+    }
+  }
+  &.align-center{
+    text-align: center;
+  }
+
+  &.margin-sm{
+    margin-bottom: 40px;
+  }
+  &.margin-md{
+    margin-bottom: 80px;
+  }
+  &.margin-lg{
+    margin-bottom: 140px;
+  }
+  &.margin-remove{
+    margin-bottom: 0;
+  }
+
+  &.color-invert{
+    h1,h2,h3,h4{
+      color: $white-color;
+    }
+    .content{
+      p{
+        color: $white-color-light;
+      }
+    }
+  }
+}
+
+.co-btn{
+  z-index: 0;
+  min-width: 170px;
+  display: inline-block;
+  position: relative;
+  width: auto;
+  outline: none;
+  border-radius: 0;
+  padding: 18px 20px;
+  text-align: center;
+
+  font-family: $font-type-2;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1em;
+  color: $white-color;
+  border: 1px solid $border-color-brown;
+  background-color: transparent;
+  overflow: hidden;
+  vertical-align: top;
+  transition: all .4s ease;
+  &:hover,&:focus,&:active{
+    color: $white-color;
+    background-color: $background-color-black-dark;
+    border-color: $background-color-black-dark;
+    transition: all .4s ease;
+    span{
+      &:before{
+        opacity: 0;
+        transition: all .4s ease;
+      }
+      &:after{
+        opacity: 1;
+        transition: all .4s ease;
+      }
+    }
+  }
+  span{
+    position: relative;
+    padding-right: 30px;
+    display: inline-block;
+    &:before, &:after {
+      content: '';
+      width: 16px;
+      height: 12px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 0px;
+      transition: all .4s ease;
+    }
+    &:before{
+      background-image: url('../img/icons/icon-arrow-right.svg');
+      opacity: 1;
+    }
+    &:after{
+      background-image: url('../img/icons/icon-arrow-right.svg');
+      opacity: 0;
+    }
+  }
+
+  &.type-fill{
+    background-color: $primary-color;
+    color: $white-color;
+    &:hover{
+      background-color: $primary-color-dark;
+    }
+  }
+  &.type-appointment{
+    min-width: 10px;
+    padding: 0;
+    border: 0;
+    font-family: $font-type-1;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    span{
+      padding-right: 30px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      &:before,&:after{
+        width: 20px;
+        height: 20px;
+        top: 0px;
+        transform: translateY(0%);
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+      &:before{
+        background-image: url("../img/icons/icon-appointment.svg");
+      }
+      &:after{
+        background-image: url("../img/icons/icon-appointment-brown.svg");
+      }
+    }
+    &:hover{
+      color: $secondary-color;
+      background-color: transparent;
+    }
+  }
+
+  &.color-dark{
+    color: $primary-color;
+    border-color: $border-color-brown-dark;
+    span{
+      &:before{
+        background-image: url('../img/icons/icon-arrow-right-brown.svg');
+      }
+    }
+    &:hover{
+      color: $white-color;
+      background-color: $primary-color;
+    }
+  }
+
+  &.size-big{
+    min-width: 180px;
+    padding: 18px 20px;
+    font-size: 18px;
+  }
+  &.width-full{
+    width: 100%;
+  }
+}
+

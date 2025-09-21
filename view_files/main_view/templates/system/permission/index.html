@@ -1,0 +1,227 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% url 'system_groups' as system_groups %}
+{% url 'system_groups_save' as system_groups_save %}
+{% block template_css %}
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+<link rel="stylesheet"
+    href="{% static '/vendor/datatables.net-fixedheader-bs4/dataTables.fixedheader.bootstrap4.css' %}">
+<link rel="stylesheet"
+    href="{% static '/vendor/datatables.net-fixedcolumns-bs4/dataTables.fixedcolumns.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-rowgroup-bs4/dataTables.rowgroup.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-scroller-bs4/dataTables.scroller.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-select-bs4/dataTables.select.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-responsive-bs4/dataTables.responsive.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/vendor/datatables.net-buttons-bs4/dataTables.buttons.bootstrap4.css' %}">
+<link rel="stylesheet" href="{% static '/examples/css/tables/datatable.css' %}">
+<link rel="stylesheet" href="{% static '/css/formValidation.min.css' %}">
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block header %}
+<h1 class="page-title">{% trans "Permission" %}</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'member_home' %}">Home</a></li>
+    <li class="breadcrumb-item active">{% trans "Permission" %}</li>
+</ol>
+{% endblock %}
+
+{% block action %}
+<div class="page-header-actions">
+    <a href="{% url 'system_permission_add' %}" type="button" class="btn btn-icon btn-danger btn-outline btn-round"
+        title="Add"><i class="icon wb-plus" aria-hidden="true"></i></a>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Panel Basic -->
+<div class="panel">
+    <header class="panel-heading">
+        <div class="panel-actions"></div>
+        <h3 class="panel-title">List</h3>
+    </header>
+    <div class="panel-body">
+        <table class="table table-hover dataTable table-striped w-full datatable" id="permission-datatable">
+            <thead>
+                <tr>
+                    <th>{% trans "SN" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Module" %}</th>
+                    <!--						<th>{% trans "Action" %}</th>-->
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="permission-crud-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form id="form-permissions" class="form" action="#" autocomplete="off">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{% trans 'Permission Modal' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <div class='fv-row form-group'>
+                        <label for='name'>{% trans "Name" %}</label>
+                        <input id='name' class='form-control' name='name'>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="save-role-form">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<!-- End Panel Basic -->
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'plugins/DataTables/datatables.js' %}"></script>
+<script src="{% static 'js/validator/FormValidation.full.min.js' %}"></script>
+<script src="{% static 'js/validator/plugins/Bootstrap5.min.js' %}"></script>
+
+<script>
+    $('#add-permission-modal').click(function () {
+        $('#permission-crud-modal').modal('show');
+    })
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    var dataTable;
+
+    $(function () {
+        dataTable = $('#permission-datatable').DataTable({
+            dom: 'frtip',
+            "serverSide": true,
+            "processing": true,
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            'ajax': { url: "{% url 'system_permission' %}", type: 'POST', data: { 'csrfmiddlewaretoken': csrftoken } },
+            columns: [
+                {
+                    data: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }, name: "sn", searchable: false
+                },
+
+                { data: "app_label", name: "app_label" },
+                { data: "model", name: "model" },
+                //{ data: null,
+                //    render: function(data,type,full,meta)
+                //	{
+                //	    console.log(data);
+                //		return "<a href='javascript:void(0)' onclick='edit("+meta.row+")' type='button' class='btn btn-icon btn-warning btn-outline btn-round' title='Edit'><i class='icon wb-pencil' aria-hidden='true'></i></a> "
+                //	} , searchable: false
+                //},
+            ],
+        });
+    });
+
+    function edit(index) {
+        var row = dataTable.row(index).data();
+        $('#id').val(row.id);
+
+        $("#form-permissions").find('input:checkbox').prop('checked', false);
+        $("#form-permissions").find('input:text,select,textarea').val(function (i, v) {
+
+            /*if(row.gender == 'M')
+            {
+                $('input:radio[name=gender][id=radio_1]').prop('checked',true);
+            }else{
+                $('input:radio[name=gender][id=radio_2]').prop('checked',true);
+            }*/
+            return row[this.name];
+        });
+
+        $('#permission-crud-modal').modal('show');
+    }
+
+    const form = document.getElementById('form-permissions');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'name': {
+                    validators: {
+                        notEmpty: {
+                            message: 'The Group Name field is required'
+                        }
+                    }
+                },
+            },
+            err: {
+                clazz: 'invalid-feedback'
+            },
+            control: {
+                // The CSS class for valid control
+                valid: 'is-valid',
+                // The CSS class for invalid control
+                invalid: 'is-invalid'
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Submit button handler
+    const submitButton = document.getElementById('save-role-form');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (validator) {
+            validator.validate().then(function (status) {
+                if (status == 'Valid') {
+                    save_form();
+                }
+            });
+        }
+    });
+
+    function save_form() {
+        $.ajax({
+            url: "{% url 'system_groups_save' %}",
+            data: $('#form-permissions').serialize(),
+            dataType: 'json',
+            success: function (result) {
+                if (result.success) {
+                    $('#permission-crud-modal').modal('hide');
+                    $('#form-permissions')[0].reset();
+                    dataTable.ajax.reload(null, false);
+                }
+            },
+            type: 'POST'
+        });
+    }
+
+</script>
+<!--	<script src="{% static 'js/my_js/datatable.js' %}"></script>-->
+<!--	script for delete-->
+<script>
+
+</script>
+{% endblock %}

@@ -1,0 +1,242 @@
+<?php
+/**
+ * Template Name: Appointment Template
+ *
+ * @package WordPress
+ * @subpackage Imagio Creations
+ * @since Imagio Creations 2025
+ * @author Imagio Creations
+ */
+$postid = get_the_ID();
+get_header();
+?>
+
+<div id="appointment-page">
+  <section class="appointment-section common-element-container">
+    <div class="custom-container medium-width-container">
+      <div class="section-title align-center margin-lg">
+        <div class="common-tagline">
+          <h3>Appointment</h3>
+        </div>
+        <h1>Plan Your Makeover</h1>
+        <div class="content">
+          <p>Pick your perfect time and let us take care of the rest.</p>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="common-form">
+          <div class="form-row-container">
+            <div class="row-item">
+              <div class="common-title type-2 margin-lg">
+                <h5>Choose a service</h5>
+              </div>
+
+              <div class="fields">
+                <div class="form-group">
+                  <div class="checkbox-row-container">
+                    <div class="checkbox-row">
+                      <div class="common-title font-sm margin-lg">
+                        <h5>For Ladies</h5>
+                      </div>
+                      <div class="checkbox-container">
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="hair" name="ladies" />
+                          <label for="hair">Hair Cut</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="hair_spa" name="ladies" />
+                          <label for="hair_spa">Hair Spa & Treatment</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="hair_color"
+                            name="ladies"
+                          />
+                          <label for="hair_color">Hair Color</label>
+                        </div>
+
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="make_up" name="ladies" />
+                          <label for="make_up">Make up</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="nails" name="Nails" />
+                          <label for="nails">Nails</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="waxing" name="ladies" />
+                          <label for="waxing">Waxing</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="bridal" name="ladies" />
+                          <label for="bridal">Bridal Make up</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="hair_straightening"
+                            name="ladies"
+                          />
+                          <label for="hair_straightening"
+                            >Hair Straightening</label
+                          >
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="keratin_treatment"
+                            name="ladies"
+                          />
+                          <label for="keratin_treatment"
+                            >Keratin Treatment</label
+                          >
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="threading" name="ladies" />
+                          <label for="threading">Threading</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="manicure" name="ladies" />
+                          <label for="manicure">Manicure & Pedicure</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input type="checkbox" id="lotus" name="ladies" />
+                          <label for="lotus">Lotus Facial</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="hair_spa_treatment"
+                            name="ladies"
+                          />
+                          <label for="hair_spa_treatment"
+                            >Hair Spa & Treatment</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="checkbox-row">
+                      <div class="common-title font-sm margin-lg">
+                        <h5>For Gents</h5>
+                      </div>
+                      <div class="checkbox-container">
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="gents_hair"
+                            name="gents_gents"
+                          />
+                          <label for="gents_hair">Hair Cut</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="gents_hair_spa"
+                            name="gents"
+                          />
+                          <label for="gents_hair_spa"
+                            >Hair Spa & Treatment</label
+                          >
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="gents_hair_color"
+                            name="gents"
+                          />
+                          <label for="gents_hair_color">Hair Color</label>
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="gents_keratin_treatment"
+                            name="gents"
+                          />
+                          <label for="gents_keratin_treatment"
+                            >Keratin Treatment</label
+                          >
+                        </div>
+                        <div class="checkbox-item">
+                          <input
+                            type="checkbox"
+                            id="gents_hair_spa_treatment"
+                            name="gents"
+                          />
+                          <label for="gents_hair_spa_treatment"
+                            >Hair Straighten & Smoothing</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-item">
+              <div class="common-title type-2 margin-sm">
+                <h5>Choose Location</h5>
+              </div>
+
+              <div class="fields">
+                <div class="form-group">
+                  <select>
+                    <option value="">Choose your preferred location*</option>
+                    <option value="">Kathmandu Mall</option>
+                    <option value="">Civil Mall</option>
+                    <option value="">City Center</option>
+                    <option value="">Eyeplex Mall</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-item">
+              <div class="common-title type-2 margin-sm">
+                <h5>Personal Information</h5>
+              </div>
+              <div class="fields">
+                <div class="form-group">
+                  <input type="text" placeholder="Full Name*" />
+                </div>
+                <div class="form-group half-width">
+                  <input type="tel" placeholder="Phone No*" />
+                </div>
+                <div class="form-group half-width">
+                  <input type="tel" placeholder="Email Address*" />
+                </div>
+
+                <div class="form-group half-width second-last">
+                  <input type="date" placeholder="Booking Date*" />
+                </div>
+                <div class="form-group half-width">
+                  <input type="time" placeholder="Booking Time*" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-action">
+            <input type="submit" class="co-btn type-fill" value="Submit" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="element-item type-scissor type-contact">
+      <img
+        src="<?php echo get_stylesheet_directory_uri(); ?>/img/texture/element-scissor-contact.png"
+      />
+    </div>
+    <div class="element-item type-comb type-contact">
+      <img
+        src="<?php echo get_stylesheet_directory_uri(); ?>/img/texture/element-comb-contact.png"
+      />
+    </div>
+  </section>
+</div>
+
+<?php get_footer(); ?>

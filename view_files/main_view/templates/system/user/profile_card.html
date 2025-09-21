@@ -1,0 +1,37 @@
+{% load i18n static%}
+<div class="common-content-box type-color">
+    <div class="common-aside-container">
+        <div class="aside-item">
+            <div class="common-avatar-container">
+                <div class="image-container">
+                    <div class="image-inner">
+                        <img src="{% static 'imagio_theme/img/placeholder/placeholder-person.jpg' %}">
+                        <div class="upload-toggle">
+                            <p>Upload</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-container">
+                    <div class="name">
+                        <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                    </div>
+                    <div class="info-container">
+                        <ul>
+                            <li>{{ user.email }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="links-container">
+                <ul>
+                    <li><a href="{% url 'system_users_profile' %}"
+                            class="{% if request.resolver_match.url_name == 'system_users_profile' %}active{% endif %}">Profile</a>
+                    </li>
+                    <li><a href="{% url 'system_users_change_password' %}"
+                            class="{% if request.resolver_match.url_name == 'system_users_change_password' %}active{% endif %}">Password</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

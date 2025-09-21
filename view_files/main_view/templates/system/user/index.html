@@ -1,0 +1,434 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% block template_css %}
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>All User</h4>
+</div>
+{% include 'system/setting_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="common-list-page">
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success"> {{ message }} </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="common-content-box">
+                    <div class="common-table">
+                        <div class="title-container">
+                            <div class="title-item">
+                                <div class="common-form type-table">
+                                    <div class="fields">
+                                        <div class="form-group-wrapper">
+                                            <div class="form-group type-icon type-left">
+                                                <span class="icon-container">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
+                                                            height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
+                                                            fill="currentColor" />
+                                                        <path
+                                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                <input type="text" placeholder="Search User" data-ic-filter="search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="title-item">
+                                <div class="inner-item">
+                                    <a href="JavaScript:void(0)" id="add-user-modal" class="co-btn">Add User</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table id="basic-datatable">
+                            <thead>
+                                <tr>
+                                    <td>SN</td>
+                                    <td>Username</td>
+                                    <td>Email</td>
+                                    <td>First Name</td>
+                                    <td>Last Name</td>
+                                    <td class="text-end wd-sm">Action</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="user-edit" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-loading-area">
+                        <div class="common-title type-line">
+                            <h5>Add User</h5>
+                        </div>
+
+                        <div class="common-form">
+                            <form id="form-users" class="form" action="#" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" id="id" />
+                                <div class="fields">
+                                    <div class="form-group-wrapper">
+                                        <div class="form-group-item">
+                                            <div class="form-group fv-row half-width">
+                                                <label>First Name</label>
+                                                <input name="first_name" id="first_name">
+                                            </div>
+                                            <div class="form-group fv-row half-width">
+                                                <label>Last Name</label>
+                                                <input name="last_name" id="last_name">
+                                            </div>
+                                            <div class="form-group fv-row">
+                                                <label>Email</label>
+                                                <input name="email" id="email">
+                                            </div>
+                                            <div class="form-group fv-row">
+                                                <label>Username</label>
+                                                <input name="username" id="username">
+                                            </div>
+                                            <div class="form-group fv-row type-password">
+                                                <label>Password</label>
+                                                <div class="form-inner">
+                                                    <input type="password" name="password" id="password">
+                                                    <div class="password-toggle">
+                                                        <i class="fas fa-eye" aria-hidden="true"></i>
+                                                        <i class="fas fa-eye-slash" aria-hidden="true"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- User Role -->
+                                            <div class="form-group fv-row">
+                                                <label>User Role</label>
+                                                <select name="group" id="group">
+                                                    <option value="">Select Role</option>
+                                                    {% for group in groups %}
+                                                    <option value="{{ group.id }}">{{ group.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <!-- Outlet (hidden by default; shown only if role name == 'Outlet Group') -->
+                                            <div class="form-group fv-row" id="outlet-wrapper" style="display:none;">
+                                                <label>Outlet</label>
+                                                <select name="outlet_id" id="outlet">
+                                                    <option value="">Select Outlet</option>
+                                                    {% for outlet in outlets %}
+                                                    <option value="{{ outlet.id }}">{{ outlet.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-action">
+                                    <input type="submit" class="co-btn type-full" id="save-user-form" value="Save">
+                                </div>
+                            </form>
+                        </div><!-- /.common-form -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    // (kept if you actually have this element; otherwise safe to remove)
+    $('#dms_dealer_id').select2 && $('#dms_dealer_id').select2();
+</script>
+
+<script>
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // Helpers to toggle Outlet field based on selected group's VISIBLE NAME
+    function isOutletGroupSelected() {
+        const selectedText = $('#group option:selected').text().trim().toLowerCase();
+        return selectedText === 'outlet group';
+    }
+
+    function toggleOutletField() {
+        const show = isOutletGroupSelected();
+        $('#outlet-wrapper').toggle(show);
+        if (!show) {
+            $('#outlet').val(''); // clear outlet if hiding
+        }
+    }
+
+    var dt;
+    var table;
+
+    var KTDatatablesServerSide = (function () {
+        function initDatatable(status = true) {
+            dt = $("#basic-datatable").DataTable({
+                searchDelay: 500,
+                serverSide: true,
+                processing: true,
+
+                ordering: false,
+                pageLength: 25,
+                order: [[2, 'asc']],
+                stateSave: true,
+                destroy: true,
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child input[type="checkbox"]',
+                    className: 'row-selected'
+                },
+                ajax: {
+                    url: "{% url 'system_users' %}",
+                    type: 'POST',
+                    data: { 'csrfmiddlewaretoken': csrftoken }
+                },
+                columns: [
+                    {
+                        data: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        name: "sn",
+                        searchable: false
+                    },
+                    {% if perms.users.add_newuser %}
+                    {
+                    data: "username",
+                    name: "username",
+                    render: function (data, type, row, meta) {
+                        return '<a href="javascript:void(0)" onclick="edit(' + meta.row + ')">' + data + '</a>';
+                    }
+                },
+                {
+                    data: "email",
+                    name: "email",
+                    render: function (data, type, row, meta) {
+                        return '<a href="javascript:void(0)" onclick="edit(' + meta.row + ')">' + data + '</a>';
+                    }
+                },
+                {% else %}
+        { data: "username", name: "username" },
+        { data: "email", name: "email" },
+        {% endif %}
+        { data: "first_name", name: "first_name" },
+        { data: "last_name", name: "last_name" },
+        {
+            data: function (data, type, row, meta) {
+                {% if perms.users.add_newuser %}
+                var buttons = '<td>';
+                buttons += '<ul class="type-action">';
+                buttons += '<li>';
+                buttons += '<a href="javascript:void(0)" onclick="assign_permission(' + meta.row + ')"><i class="fa fa-user-cog"></i></a>';
+                buttons += '</li>';
+                buttons += '<li>';
+                buttons += '<div class="dropdown">';
+                buttons += '<button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">';
+                buttons += '<i class="flaticon-more"></i>';
+                buttons += '</button>';
+                buttons += '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
+                buttons += '<li><a class="dropdown-item" href="javascript:void(0)" onclick="edit(' + meta.row + ')">Edit</a></li>';
+                buttons += '</ul>';
+                buttons += '</div>';
+                buttons += '</li>';
+                buttons += '</ul>';
+                buttons += '</td>';
+                return buttons;
+                {% else %}
+                return '';
+                {% endif %}
+            },
+            name: 'action',
+                searchable: false
+        },
+                ],
+    createdRow: function (row, data, dataIndex) {
+        $(row).find('td:eq(3)').attr('data-filter');
+    }
+            });
+
+    var state = dt.state.loaded();
+    if (state) {
+        const filterSearch = document.querySelector('[data-ic-filter="search"]');
+        var searchValue = state.search.search;
+        if (filterSearch) filterSearch.value = searchValue;
+    }
+
+    table = dt.$;
+    dt.on('draw', function () {
+        // if you use KTMenu (Metronic)
+        if (window.KTMenu && KTMenu.createInstances) {
+            KTMenu.createInstances();
+        }
+    });
+        }
+
+    function handleSearchDatatable() {
+        const filterSearch = document.querySelector('[data-ic-filter="search"]');
+        if (!filterSearch) return;
+        filterSearch.addEventListener('keyup', function (e) {
+            dt.search(e.target.value).draw();
+        });
+    }
+
+    return {
+        init: function () {
+            initDatatable();
+            handleSearchDatatable();
+        }
+    }
+    }) ();
+
+    // flash message fade
+    $('.alert-success').fadeOut(5000);
+
+    // open modal to add
+    $('#add-user-modal').on('click', function () {
+        $('#form-users')[0].reset();
+        $('#id').val('');
+        toggleOutletField(); // ensure hidden on fresh form
+        $('#user-edit').modal('show');
+    });
+
+    // Edit handler (called from action column)
+    function edit(index) {
+        var row = dt.row(index).data();
+
+        $('#id').val(row.id);
+
+        $("#form-users").find('input:checkbox').prop('checked', false);
+        // bulk fill for simple text/select/textarea fields by matching "name"
+        $("#form-users").find('input:text,select,textarea').val(function () {
+            return row[this.name];
+        });
+
+        // group is set above if row has "group" (id) bound to name="group"
+        // outlet may come as row.outlet_id or row.outlet.id or row.outlet
+        if (row.outlet_id) {
+            $('#outlet').val(row.outlet_id);
+        } else if (row.outlet && row.outlet.id) {
+            $('#outlet').val(row.outlet.id);
+        } else if (typeof row.outlet === 'number') {
+            $('#outlet').val(row.outlet);
+        }
+
+        // toggle after values are set so the correct state is shown
+        toggleOutletField();
+
+        $('#user-edit').modal('show');
+    }
+    window.edit = edit; // expose for inline onclick
+
+    // Submit button handler
+    const submitButton = document.getElementById('save-user-form');
+    submitButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (validator) {
+            validator.validate().then(function (status) {
+                if (status === 'Valid') {
+                    save_form();
+                }
+            });
+        }
+    });
+
+    function save_form() {
+        $.ajax({
+            url: "{% url 'system_users_save' %}",
+            data: $('#form-users').serialize(),
+            dataType: 'json',
+            success: function (result) {
+                if (result.success) {
+                    $('#user-edit').modal('hide');
+                    $('#form-users')[0].reset();
+                    toggleOutletField(); // reset visibility state
+                    // FIX: use dt, not dataTable
+                    dt.ajax.reload(null, false);
+                }
+            },
+            type: 'POST'
+        });
+    }
+
+    function assign_permission(index) {
+        var row = dt.row(index).data();
+        location.href = '{% url "system_user_assign_permission" %}?user_id=' + row.id
+    }
+    window.assign_permission = assign_permission; // expose for inline onclick
+
+    // ----- FormValidation (Metronic) -----
+    var form = document.getElementById('user-edit');
+    var validator = FormValidation.formValidation(
+        form,
+        {
+            fields: {
+                'username': {
+                    validators: {
+                        notEmpty: { message: 'Username is required' },
+                        remote: {
+                            data: function () {
+                                return {
+                                    type: 'username',
+                                    csrfmiddlewaretoken: csrftoken,
+                                    id: document.querySelector('#id').value,
+                                };
+                            },
+                            message: 'This username is not available',
+                            method: 'POST',
+                            url: '{% url 'system_users_check' %}',
+                        }
+                    }
+                },
+            },
+            err: { clazz: 'invalid-feedback' },
+            control: {
+                valid: 'is-valid',
+                invalid: 'is-invalid'
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: '.fv-row',
+                    eleInvalidClass: '',
+                    eleValidClass: ''
+                })
+            }
+        }
+    );
+
+    // Init after all functions defined
+    $(document).ready(function () {
+        KTDatatablesServerSide.init();
+        // show/hide Outlet on group change
+        $(document).on('change', '#group', toggleOutletField);
+        // ensure initial state matches current selection (usually hidden on Add)
+        toggleOutletField();
+    });
+</script>
+{% endblock %}

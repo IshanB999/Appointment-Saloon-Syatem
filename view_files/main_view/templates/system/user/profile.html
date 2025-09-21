@@ -1,0 +1,81 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% block template_css %}
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>Profile</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="profile-page">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success"> {{ message}} </div>
+    {% endfor %}
+    {% endif %}
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                <div class="common-layout-container type-reverse">
+                    <div class="layout-item">
+                        {% include "main_view/templates/system/user/profile_card.html" %}
+                    </div>
+                    <div class="layout-item">
+                        <div class="common-form">
+                            <div class="common-content-box">
+                                <div class="box-title">
+                                    <div class="title-item">
+                                        <h5>Personal Information</h5>
+                                    </div>
+                                </div>
+
+                                <div class="box-content">
+                                    <form method="POST" action="{% url 'system_users_update_profile' %}">
+                                        {% csrf_token %}
+                                        <div class="fields">
+                                            <div class="form-group-wrapper">
+                                                <div class="form-group-item">
+                                                    <div class="form-group half-width">
+                                                        <label>First Name</label>
+                                                        <input type="text" name="first_name"
+                                                            value="{{ user.first_name }}" placeholder="Eg. John">
+                                                    </div>
+                                                    <div class="form-group half-width">
+                                                        <label>Last Name</label>
+                                                        <input type="text" name="last_name" value="{{ user.last_name }}"
+                                                            placeholder="Eg. Doe">
+                                                    </div>
+
+                                                    <div class="form-group half-width remove-bottom-margin-type-2">
+                                                        <label>Email Address</label>
+                                                        <input type="email" name="email" value="{{ user.email }}"
+                                                            placeholder="Eg. info@imagiocreations.com" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-action">
+                                            <input type="submit" class="co-btn" value="Save Changes">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+{% block js %}
+
+{% endblock %}

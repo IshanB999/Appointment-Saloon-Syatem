@@ -1,0 +1,300 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% block template_css %}
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>User Roles</h4>
+</div>
+{% include 'system/setting_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<div id="common-list-page">
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success"> {{ message}} </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="common-content-box">
+                    <div class="common-table">
+                        <div class="title-container">
+                            <div class="title-item">
+                                <div class="common-form type-table">
+                                    <div class="fields">
+                                        <div class="form-group-wrapper">
+                                            <div class="form-group type-icon type-left">
+                                                <span class="icon-container">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546"
+                                                            height="2" rx="1" transform="rotate(45 17.0365 15.1223)"
+                                                            fill="currentColor" />
+                                                        <path
+                                                            d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                                            fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                <input type="text" placeholder="Search Roles" data-ic-filter="search" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="title-item">
+                                <div class="inner-item">
+                                    <a href="JavaScript:void(0)" id="add-role-modal" class="co-btn">Add Role</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table id="basic-datatable">
+                            <thead>
+                                <tr>
+                                    <td>SN</td>
+                                    <td>Name</td>
+                                    <td class="text-end wd-sm">Action</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="role-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-loading-area">
+                        <div class="common-title type-line">
+                            <h5>Add/Edit Role</h5>
+                        </div>
+
+
+                        <div class="common-form">
+                            <form id="form-roles" class="form" action="#" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" id="id" />
+                                <div class="fields">
+                                    <div class="form-group-wrapper">
+                                        <div class="form-group-item">
+                                            <div class="form-group fv-row">
+                                                <label>Name</label>
+                                                <input name='name' id='name'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-action">
+                                    <input type="submit" class="co-btn type-full" id="save-role-form">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('#add-role-modal').click(function () {
+        $('#role-crud-modal').modal('show');
+    })
+
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    var dt;
+    var table;
+    var KTDatatablesServerSide = function () {
+        table;
+        dt;
+
+        var e,
+            t,
+            n,
+            r,
+            o,
+            a;
+        // Private functions
+        function initDatatable(status = true) {
+            console.log(status)
+            dt = $("#basic-datatable").DataTable({
+                searchDelay: 500,
+                "serverSide": true,
+                "processing": true,
+
+                ordering: false,
+                pageLength: 25,
+                order: [[2, 'asc']],
+                stateSave: true,
+                destroy: true,
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child input[type="checkbox"]',
+                    className: 'row-selected'
+                },
+                'ajax': { url: "{% url 'system_groups' %}", type: 'POST', data: { 'csrfmiddlewaretoken': csrftoken } },
+                columns: [
+                    {
+                        data: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }, name: "sn", searchable: false
+                    },
+
+                    {% if perms.users.view_newuser %}
+               {
+                    data: "name",
+                    name: "name",
+                    render: function (data, type, row, meta) {
+                        return '<a href="javascript:void(0)" onclick="edit(' + meta.row + ')">' + data + '</a>';
+                    }
+                },
+                {% else %}
+        {
+            data: "name",
+                name: "name"
+        },
+
+        {% endif %}
+
+        {
+            data: function(data, type, row, meta) {
+                {% if perms.users.view_newuser %}
+                var buttons = '';
+                buttons += '<td>';
+                buttons += '<ul class="type-action">';
+                buttons += '<li>';
+                buttons += '<a href="javascript:void(0)" onclick="assign_permission(' + meta.row + ')"><i class="fa fa-user-cog"></i></a>';
+                buttons += '</li>';
+                buttons += '<li>';
+                buttons += '<div class="dropdown">';
+                buttons += '<button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">';
+                buttons += '<i class="flaticon-more"></i>';
+                buttons += '</button>';
+                buttons += '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">';
+                buttons += '<li><a class="dropdown-item" href="javascript:void(0)" onclick="edit(' + meta.row + ')">Edit</a></li>';
+                /*buttons += '<li><a class="dropdown-item type-delete" onclick="" title="Delete">Delete</a></li>';*/
+                buttons += '</ul>';
+                buttons += '</div>';
+                buttons += '</li>';
+                buttons += '</ul>';
+                buttons += '</td>';
+                {% else %}
+                // Handle the case when the user does not have the required permission
+                buttons += '<td>No permission</td>';
+                {% endif %}
+
+                return buttons;
+            },
+            name: 'action',
+                searchable: false,
+},
+                ],
+    createdRow: function (row, data, dataIndex) {
+        $(row).find('td:eq(3)').attr('data-filter');
+    }
+            });
+    var state = dt.state.loaded();
+    if (state) {
+        const filterSearch = document.querySelector('[data-ic-filter="search"]');
+        var searchValue = state.search.search;
+        filterSearch.value = searchValue
+    }
+
+    table = dt.$;
+    dt.on('draw', function () {
+        KTMenu.createInstances();
+    });
+        }
+    var handleSearchDatatable = function () {
+        const filterSearch = document.querySelector('[data-ic-filter="search"]');
+        filterSearch.addEventListener('keyup', function (e) {
+            dt.search(e.target.value).draw();
+        });
+    }
+    return {
+        init: function () {
+            initDatatable();
+            handleSearchDatatable();
+        }
+    }
+    }();
+
+    $('.alert-success').fadeOut(5000);
+
+
+    $(document).ready(function () {
+        KTDatatablesServerSide.init();
+    });
+
+
+    $('#add-role-modal').click(function () {
+        $('#form-roles')[0].reset();
+        $('#id').val('');
+        $('#role-modal').modal('show');
+    })
+
+    function edit(index) {
+        var row = dt.row(index).data();
+        $('#id').val(row.id);
+
+        $("#form-roles").find('input:checkbox').prop('checked', false);
+        $("#form-roles").find('input:text,select,textarea').val(function (i, v) {
+
+            /*if(row.gender == 'M')
+            {
+                $('input:radio[name=gender][id=radio_1]').prop('checked',true);
+            }else{
+                $('input:radio[name=gender][id=radio_2]').prop('checked',true);
+            }*/
+            return row[this.name];
+        });
+
+        $('#role-modal').modal('show');
+    }
+
+    function assign_permission(index) {
+        var row = dt.row(index).data();
+        location.href = '{% url "system_role_assign_permission"  %}?role_id=' + row.id
+    }
+
+    $('#save-role-form').on('click', function () {
+        save_form();
+    });
+
+    function save_form() {
+        $.ajax({
+            url: "{% url 'system_groups_save' %}",
+            data: $('#form-roles').serialize(),
+            dataType: 'json',
+            success: function (result) {
+                if (result.success) {
+                    $('#role-modal').modal('hide');
+                    $('#form-roles')[0].reset();
+                    dataTable.ajax.reload(null, false);
+                }
+            },
+            type: 'POST'
+        });
+    }
+</script>
+{% endblock %}

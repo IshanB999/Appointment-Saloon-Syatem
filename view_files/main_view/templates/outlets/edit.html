@@ -1,0 +1,109 @@
+{% extends "main_base.html" %}
+{% load i18n static%}
+
+{% block template_css %}
+{% endblock %}
+
+{% block title %}
+{{ title|default:"" }}
+{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>Outlets</h4>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div id="common-list-page">
+    <section class="content-section">
+        <div class="custom-container">
+            <div class="section-content">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success"> {{ message}} </div>
+                {% endfor %}
+                {% endif %}
+
+                <div class="common-content-box">
+                    <div class="common-table">
+                        <div class="common-form">
+                            <form action="{% url 'admin_outlet_update' %}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="{{ outlet.id }}">
+                                {% csrf_token %}
+                                <div class="fields">
+                                    <div class="form-group-wrapper">
+                                        <div class="form-group-item">
+                                            <div class="form-group fv-row">
+                                                <label>{% trans "Name" %}</label>
+                                                <input type="text" name="name" id="name"
+                                                    placeholder="{% trans 'Name' %}" value="{{ outlet.name }}" />
+                                            </div>
+                                            <div class="form-group fv-row">
+                                                <label>{% trans "Address" %}</label>
+                                                <input type="text" name="address" id="address"
+                                                    placeholder="{% trans 'Address' %}" value="{{ outlet.address }}" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group fv-row">
+                                                    <label>{% trans "Phone" %}</label>
+                                                    <input type="text" name="phone" id="phone"
+                                                        placeholder="{% trans 'Phone' %}" value="{{ outlet.phone }}" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group fv-row">
+                                                    <label>{% trans "Mobile" %}</label>
+                                                    <input type="text" name="mobile" id="mobile"
+                                                        placeholder="{% trans 'Mobile' %}"
+                                                        value="{{ outlet.mobile }}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group fv-row">
+                                            <label>{% trans "Email" %}</label>
+                                            <input type="text" name="email" id="email" placeholder="{% trans 'Email' %}"
+                                                value="{{ outlet.email }}" />
+                                        </div>
+                                        <div class="form-group fv-row">
+                                            <label>{% trans "Image" %}</label>
+
+                                            <input type="file" name="image" id="image" />
+                                        </div>
+                                        <div class="form-group fv-row">
+                                            <label>{% trans "Status" %}</label>
+                                            <select name="status" id="status">
+                                                <option value="1" {% if outlet.status %}selected{% endif %}>Active
+                                                </option>
+                                                <option value="0" {% if not outlet.status %}selected{% endif %}>Inactive
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group fv-row">
+                                            <label>{% trans "Sort Order" %}</label>
+                                            <input type="number" name="sort_order" id="sort_order"
+                                                placeholder="{% trans 'Sort Order' %}"
+                                                value="{{ outlet.sort_order }}" />
+                                        </div>
+                                        <div class="form-group fv-row">
+                                            <button type="submit" class="co-btn">{% trans "Save" %}</button>
+                                            <a href="{% url 'admin_outlet_index' %}" class="co-btn">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</section>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

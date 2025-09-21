@@ -1,0 +1,144 @@
+{% load i18n static view_files_main_view_template_tags %}
+{% url 'member_home' as member_home %}
+
+<header id="header-wrapper">
+    <div class="sidebar-container">
+        <div class="sidebar-item type-header">
+            <div class="common-logo-container type-lg">
+                <a href="{% url 'member_home' %}">
+                    <img src="{% static 'imagio_theme/img/logo/neeldavids-logo.png' %}">
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-item type-content">
+            <div class="nav-container">
+                <div class="nav-item">
+                    <ul>
+                        <li>
+                            <a href="{% url 'member_home' %}">
+                                <span class="type-icon"><i class="flaticon-home"></i></span>
+                                <span class="type-text">Dashboard</span>
+                            </a>
+                        </li>
+
+                        {% if perms.users.view_newuser or perms.group.view_group %}
+                        <li
+                            class="has-sub-menu  {% if request.resolver_match.url_name == 'system_users' or request.resolver_match.url_name == 'system_groups' %} menu-active {% endif %}">
+                            <a href="{% url 'system_users' %}">
+                                <span class="type-icon"><i class="flaticon-customer"></i></span>
+                                <span class="type-text">{% trans "User Management" %}</span>
+                            </a>
+                            <ul>
+                                <li class="{% if request.resolver_match.url_name == 'system_users' %}active{% endif %}">
+                                    <a href="{% url 'system_users' %}">
+                                        <span class="type-text">Users</span>
+                                    </a>
+                                </li>
+                                <li
+                                    class="{% if request.resolver_match.url_name == 'system_groups' %}active{% endif %}">
+                                    <a href="{% url 'system_groups' %}">
+                                        <span class="type-text">Groups</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                        {% if perms.outlets.view_outlet %}
+                        <li>
+                            <a href="{% url 'admin_outlet_index' %}">
+                                <span class="type-icon"><i class="flaticon-home"></i></span>
+                                <span class="type-text">Outlets</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if perms.service.view_service %}
+                        <li>
+                            <a href="{% url 'admin_service_index' %}">
+                                <span class="type-icon"><i class="flaticon-home"></i></span>
+                                <span class="type-text">Services</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if perms.bookings.view_booking %}
+                        <li>
+                            <a href="{% url 'admin_booking_index' %}">
+                                <span class="type-icon"><i class="flaticon-home"></i></span>
+                                <span class="type-text">Bookings</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if perms.employees.view_employee %}
+<li>
+    <a href="{% url 'admin_employees_index' %}">
+        <span class="type-icon"><i class="flaticon-home"></i></span>
+        <span class="type-text">Employees</span>
+    </a>
+</li>
+{% endif %} 
+
+                    </ul>
+                </div>
+
+                <div class="nav-item">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="mobile-nav-wrapper">
+    <ul>
+        <li>
+            <a href="{% url 'member_home' %}">
+                <div class="inner">
+                    <img src="{% static 'imagio_theme/img/icons/icon_home.png' %}">
+                    <p>Home</p>
+                </div>
+            </a>
+        </li>
+        <li class="menu-toggle">
+            <div class="inner">
+                <div class="common-toggle">
+                    <img src="{% static 'imagio_theme/img/icons/icon_menu.png' %}">
+                </div>
+                <p>Menu</p>
+            </div>
+        </li>
+        <li>
+            <div class="inner bottom-drawer-toggle">
+                <img src="{% static 'imagio_theme/img/icons/icon_settings.png' %}">
+                <p>Settings</p>
+            </div>
+        </li>
+        <li>
+            <a href="/logout/">
+                <div class="inner">
+                    <img src="{% static 'imagio_theme/img/icons/icon_logout.png' %}">
+                    <p>Logout</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="common-mobile-drawer">
+    <div class="card-inner">
+        <div class="card-item">
+            <div class="title">
+                <h4>My Account</h4>
+            </div>
+            <div class="content">
+                <ul>
+                    <li>
+                        <a href="/logout/">
+                            <img src="{% static 'imagio_theme/img/icons/icon_logout.png' %}">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
