@@ -3,6 +3,7 @@ from django.db import models
 from django_softdelete.models import SoftDeleteModel
 from outlets.models import Outlet
 from service.models import Service
+from outlets.models import OutletServicePrice
 
 
 class Booking(SoftDeleteModel, models.Model):
@@ -23,6 +24,20 @@ class Booking(SoftDeleteModel, models.Model):
 
     class Meta:
         db_table = "db_bookings"
+
+    @property
+    def total_price(self):
+        booking_services=BookingService.objects.filter(booking=self)
+        total=0
+        for bs in booking_services:
+            if bs.service and self.outlet:
+                try:
+                    outlet_price=OutletServicePrice.objects.get(outlet=self.outlet ,service=bs.service)
+                    total +=outlet_price.price
+                except OutletServicePrice.DoesNotExist:
+                    total += getattr(bs.service,'price',0)
+
+        return total
 
 
 class BookingService(SoftDeleteModel, models.Model):

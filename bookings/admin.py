@@ -5,6 +5,7 @@ from service.models import Service
 from django.db.models import Q
 from django.utils.safestring import mark_safe
 import json, re
+from outlets.models import OutletServicePrice
 
 def index(request):
     base_qs = Booking.objects.select_related('outlet')
@@ -47,6 +48,7 @@ def index(request):
                 "booking_date": b.booking_date.strftime("%Y-%m-%d") if b.booking_date else "",
                 "booking_time": b.booking_time.strftime("%H:%M") if b.booking_time else "",
                 "status": b.status or "",
+                "price":str(b.total_price)
             })
 
         payload = {
@@ -67,10 +69,26 @@ def detail(request):
 
     booking = get_object_or_404(Booking.objects.select_related("outlet"), pk=booking_id)
     services = Service.objects.filter(bookingservice__booking_id=booking.id).only("id", "name", "code", "gender").order_by("name").distinct()
-    
+
+    # Calculate prices for each service and total
+    service_prices = []
+    total_price = 0
+    for s in services:
+        price_obj = None
+        if booking.outlet:
+            price_obj = OutletServicePrice.objects.filter(outlet=booking.outlet, service=s).first()
+        price = price_obj.price if price_obj else 0
+        total_price += price
+        service_prices.append({
+            "service": s,
+            "price": price
+        })
+
     context = {
         "booking": booking,
-        "services": services,
+        "services": service_prices,  # list of dicts with service and price
+        "total_price": total_price,
         "title": f"Booking #{booking.id}",
     }
     return render(request, "booking/detail.html", context)
+

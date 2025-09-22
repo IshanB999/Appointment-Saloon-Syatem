@@ -88,36 +88,47 @@
                         </table>
                     </div>
 
-                    <!-- Services -->
-                    <div class="common-table mt-4">
-                        <h5 class="mb-3">Selected Services</h5>
-                        <table id="basic-datatable" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width:70px;">SN</th>
-                                    <th>Service Name</th>
-                                    <th style="width:180px;">Code</th>
-                                    <th style="width:180px;">Gender</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if services %}
-                                {% for s in services %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ s.name|default:"—" }}</td>
-                                    <td>{{ s.code|default:"—" }}</td>
-                                    <td>{{ s.gender|default:"—" }}</td>
-                                </tr>
-                                {% endfor %}
-                                {% else %}
-                                <tr>
-                                    <td colspan="4" class="text-center">No services selected.</td>
-                                </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
+                   <!-- Services -->
+<div class="common-table mt-4">
+    <h5 class="mb-3">Selected Services</h5>
+    <table id="selected-services" class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width:70px;">SN</th>
+                <th>Service Name</th>
+                <th style="width:180px;">Code</th>
+                <th style="width:180px;">Gender</th>
+                <th style="width:120px;">Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if services %}
+                {% for item in services %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.service.name|default:"—" }}</td>
+                    <td>{{ item.service.code|default:"—" }}</td>
+                    <td>{{ item.service.gender|default:"—" }}</td>
+                    <td>{{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">No services selected.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+        {% if services %}
+<tfoot>
+    <tr style="background-color: white;">
+        <th colspan="4" class="text-end">Total</th>
+        <th>{{ total_price }}</th>
+    </tr>
+</tfoot>
+{% endif %}
+    </table>
+</div>
+
                 </div>
             </div>
         </div>
