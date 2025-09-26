@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Success</title>
+    <link rel="stylesheet" href="{% static 'imagio_frontend/css/styles.css' %}">
+</head>
+<body>
+    <div class="custom-container">
+        <div class="section-title align-center margin-lg">
+            <h1>Booking Successful!</h1>
+            <p>Your appointment has been confirmed. You will be redirected to the homepage shortly.</p>
+        </div>
+    </div>
+
+    <script>
+        // Redirect after 5 seconds
+        setTimeout(function() {
+            window.location.href = "{% url 'public_home' %}";
+        }, 5000);
+    </script>
+</body>
+</html>

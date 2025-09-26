@@ -21,6 +21,9 @@ class Booking(SoftDeleteModel, models.Model):
     booking_time = models.TimeField(null=True, blank=True)
     booking_message = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=255, null=True, blank=True)
+    payment_status = models.CharField(max_length=20, default="pending")  # pending, paid, failed
+    payment_method = models.CharField(max_length=20, null=True, blank=True)  # cash, esewa
+    esewa_tid = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         db_table = "db_bookings"

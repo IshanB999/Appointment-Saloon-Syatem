@@ -1,0 +1,100 @@
+{% load static view_files_frontend_template_tags %}
+{{ wp_header_full|safe }}
+<link rel="stylesheet" href="{% static 'imagio_frontend/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'imagio_frontend/css/responsive.css' %}">
+
+<div id="appointment-page">
+    <section class="appointment-section common-element-container">
+        <div class="custom-container medium-width-container">
+            <div class="section-title align-center margin-lg">
+                <div class="common-tagline">
+                    <h3>Booking Summary</h3>
+                </div>
+                <h1>Confirm Your Appointment</h1>
+                <div class="content">
+                    <p>Check your details and choose your payment method.</p>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="common-form">
+                    <div class="form-row-container">
+
+                        <div class="row-item">
+                            <div class="common-title type-2 margin-lg">
+                                <h5>Services & Prices</h5>
+                            </div>
+                            <div class="fields">
+                                <table class="booking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Branch</th>
+                                            <th>Price (NRs)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for s in services %}
+                                        <tr>
+                                            <td>{{ s.name }}</td>
+                                            <td>{{ booking.outlet.name }}</td>
+                                            <td>{{ s.price }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2"><strong>Total</strong></td>
+                                            <td><strong>{{ total }}</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row-item">
+                            <div class="common-title type-2 margin-lg">
+                                <h5>Choose Payment Method</h5>
+                            </div>
+                            <div class="fields form-action">
+                                <form method="POST" action="{% url 'pay_cash' booking_id=booking.id %}" style="display:inline-block;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="co-btn type-fill">Pay with Cash</button>
+                                </form>
+                            
+
+                                <form action="{% url 'pay_esewa' booking.id %}" method="POST" style="display:inline-block;">
+                                     {% csrf_token %}
+                                    <button type="submit" class="co-btn type-fill">Pay with eSewa</button>
+                                </form>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{ wp_footer_full|safe }}
+
+<style>
+.booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.booking-table th, .booking-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+.booking-table th {
+    background-color: #f4f4f4;
+}
+.form-action button {
+    min-width: 150px;
+}
+</style>

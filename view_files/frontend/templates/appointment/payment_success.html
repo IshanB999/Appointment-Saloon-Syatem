@@ -1,0 +1,18 @@
+{% load static view_files_frontend_template_tags %}
+{{ wp_header_full|safe }}
+
+<div id="appointment-page">
+    <section class="appointment-section common-element-container">
+        <div class="custom-container medium-width-container">
+            <div class="section-title align-center margin-lg">
+                <h1>Payment Success</h1>
+                <div class="content">
+                    <p>{{ message }}</p>
+                    <a href="{% url 'public_home' %}" class="co-btn type-fill">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{{ wp_footer_full|safe }}

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'employees',
     'widget_tweaks',
     
+    
 ]
 
 MIDDLEWARE = [
@@ -147,6 +148,8 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+
+
 MEDIA_URL = '/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
@@ -177,3 +180,12 @@ CACHES = {
         "LOCATION": "wp-fragment-cache",
     }
 }
+
+
+# eSewa Sandbox Configuration
+ESEWA_PAYMENT_URL = "https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+ESEWA_VERIFY_URL = "https://rc.esewa.com.np/api/epay/transaction/status/"
+ESEWA_SECRET_KEY = "8gBm/:&EnhH.1/q"   # Sandbox Secret Key
+ESEWA_PRODUCT_CODE = "EPAYTEST"
+ESEWA_SUCCESS_URL = "http://127.0.0.1:8000/esewa/success/"
+ESEWA_FAILURE_URL = "http://127.0.0.1:8000/esewa/failure/"
