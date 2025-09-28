@@ -23,6 +23,8 @@ from decimal import Decimal
 from django.conf import settings
 import requests
 from django.urls import reverse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 
 
@@ -133,20 +135,35 @@ def payment_page(request, booking_id):
         "services": services,
         "total": total,
     }
-    return render(request, "frontend/templates/appointment/payment_page.html", context)
+    return render(request, "appointment/payment_page.html", context)
 
 # -------------------- Pay Cash --------------------
 def pay_cash(request, booking_id):
-    # print('hfdrdd')
     booking = get_object_or_404(Booking, id=booking_id)
 
-    # Mark booking as paid via cash
-    booking.payment_status = "paid"
-    booking.status = "confirmed"
-    booking.save()
+    # Compute services with prices in the view
+    services_with_prices = []
+    total = 0
+    for bs in booking.bookingservice_set.all():
+        sp = OutletServicePrice.objects.filter(outlet=booking.outlet, service=bs.service).first()
+        price = sp.price if sp else 0
+        services_with_prices.append({
+            "name": bs.service.name,
+            "price": price
+        })
+        total += price
 
-    # Render a temporary success page with auto-redirect
-    return render(request, "frontend/templates/appointment/cash_success.html", {"booking": booking})
+    # Send email if needed
+    if booking.email:
+        send_appointment_email(booking, request)
+
+    context = {
+        "booking": booking,
+        "services": services_with_prices,  # template uses this
+        "total": total
+    }
+
+    return render(request, "frontend/templates/appointment/cash_success.html", context)
 
 # -------------------- Pay eSewa --------------------
 
@@ -202,21 +219,74 @@ def pay_esewa(request, booking_id):
     return HttpResponse(form_html)
 
 
-def generate_esewa_signature(total_amount, transaction_uuid, product_code):
-    message = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
-    secret_key = settings.ESEWA_SECRET_KEY.encode("utf-8")
-    signature = hmac.new(secret_key, message.encode("utf-8"), hashlib.sha256).digest()
-    return base64.b64encode(signature).decode()
+# def generate_esewa_signature(total_amount, transaction_uuid, product_code):
+#     message = f"total_amount={total_amount},transaction_uuid={transaction_uuid},product_code={product_code}"
+#     secret_key = settings.ESEWA_SECRET_KEY.encode("utf-8")
+#     signature = hmac.new(secret_key, message.encode("utf-8"), hashlib.sha256).digest()
+#     return base64.b64encode(signature).decode()
 
 
-
+# -------------------- eSewa Success --------------------
 def esewa_success(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    booking.payment_status = "paid"
-    booking.status = "confirmed"
-    booking.save()
-    return redirect('public_home')  # Redirect to index.html after success
 
+    # collect services and prices
+    services_with_prices = []
+    total = 0
+    for bs in booking.bookingservice_set.all():
+        try:
+            price_obj = booking.outlet.outletserviceprice_set.get(service=bs.service)
+            price = price_obj.price
+        except OutletServicePrice.DoesNotExist:
+            price = 0
+        services_with_prices.append({
+            'name': bs.service.name,
+            'price': price
+        })
+        total += price
+
+    context = {
+        'booking': booking,
+        'services': services_with_prices,
+        'total': total,
+    }
+    return render(request, "appointment/esewa_success.html", context)
 
 def esewa_failure(request, booking_id):
     return HttpResponse("Payment failed. Please try again.")
+
+
+
+def send_appointment_email(booking, request):
+    # Calculate services with prices
+    services_with_prices = []
+    total = 0
+    for bs in booking.bookingservice_set.all():
+        sp = booking.outlet.outletserviceprice_set.filter(service_id=bs.service.id).first()
+        price = sp.price if sp else 0
+        services_with_prices.append({
+            "name": bs.service.name,
+            "price": price
+        })
+        total += price
+
+    # Build homepage URL
+    home_url = request.build_absolute_uri('/')  # This is now done in the view
+
+    subject = f"Your Appointment at {booking.outlet.name}"
+    message = render_to_string("appointment/appointment_email.html", {
+        "booking": booking,
+        "services": services_with_prices,
+        "total": total,
+        "home_url": home_url,   # Pass it to template
+    })
+
+    if booking.email:
+        send_mail(
+            subject,
+            "",
+            settings.DEFAULT_FROM_EMAIL,
+            [booking.email],
+            html_message=message,
+            fail_silently=False
+        )
