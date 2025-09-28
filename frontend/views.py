@@ -43,7 +43,7 @@ def index(request):
         "services": services,
         "title": "Home Page",
     }
-    return render(request, "frontend/templates/appointment/index.html", context)
+    return render(request, "appointment/index.html", context)
 
 
 @require_http_methods(["POST"])
@@ -163,7 +163,7 @@ def pay_cash(request, booking_id):
         "total": total
     }
 
-    return render(request, "frontend/templates/appointment/cash_success.html", context)
+    return render(request, "appointment/cash_success.html", context)
 
 # -------------------- Pay eSewa --------------------
 
