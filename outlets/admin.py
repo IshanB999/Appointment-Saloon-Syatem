@@ -3,7 +3,7 @@ from django.contrib import admin
 from .models import Outlet  ,OutletServicePrice
 from django.shortcuts import render
 from .forms import OutletForm
-from django.shortcuts import redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404
 from querystring_parser import parser
 import re
 from django.db.models import Count, Q
@@ -11,6 +11,18 @@ import json
 from django.utils.safestring import mark_safe
 from service.models import Service
 from django.contrib import messages
+from datetime import datetime, timedelta,time, date
+from datetime import time as dt_time
+from django.views.decorators.http import require_http_methods
+from bookings.models import Booking
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+
+
+
 def index(request):
     requested_html = re.search(r'^text/html', request.META.get('HTTP_ACCEPT') or "")
     if not requested_html:
@@ -149,3 +161,84 @@ def outlet_service_list(request, outlet_id):
         "existing_prices": existing_prices,
     }
     return render(request, "outlets/service_list.html", context)
+
+
+
+@require_http_methods(["GET", "POST"])
+def outlet_slot_management(request, outlet_id):
+    outlet = get_object_or_404(Outlet, id=outlet_id)
+
+    if request.method == "POST":
+        total_slots_raw = request.POST.get('total_slots', outlet.total_slots)
+        opening_time_str = request.POST.get('opening_time', outlet.opening_time.strftime("%H:%M"))
+        closing_time_str = request.POST.get('closing_time', outlet.closing_time.strftime("%H:%M"))
+        is_closed = request.POST.get('is_closed') == 'on'
+
+        try:
+            total_slots = int(total_slots_raw)
+            opening_time = datetime.strptime(opening_time_str, "%H:%M").time()
+            closing_time = datetime.strptime(closing_time_str, "%H:%M").time()
+        except ValueError:
+            messages.error(request, "Invalid input. Ensure total slots is a number and times are HH:MM.")
+            return redirect('admin_outlet_slot_management', outlet_id=outlet.id)
+
+        if opening_time >= closing_time:
+            messages.error(request, "Opening time must be before closing time.")
+            return redirect('admin_outlet_slot_management', outlet_id=outlet.id)
+
+        # Save outlet settings
+        outlet.total_slots = max(1, total_slots)
+        outlet.opening_time = opening_time
+        outlet.closing_time = closing_time
+        outlet.is_closed = is_closed
+        outlet.save()
+        messages.success(request, "Slot settings updated successfully.")
+        return redirect('admin_outlet_slot_management', outlet_id=outlet.id)
+
+    # GET: fetch today's bookings
+    today = date.today()
+    bookings = Booking.objects.filter(outlet=outlet, booking_date=today).order_by('booking_time')
+
+    context = {
+        'outlet': outlet,
+        'bookings': bookings,
+        'today': today,
+    }
+    return render(request, 'outlets/slot_management.html', context)
+
+
+@require_http_methods(["POST"])
+def complete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = 'completed'
+    booking.save()
+    return JsonResponse({"success": True})
+
+
+@csrf_exempt
+@require_POST
+def change_booking_status(request, booking_id):
+    """
+    Updates the booking status to either 'completed' or 'cancelled' and frees slots.
+    Expects JSON body: {"status": "completed"} or {"status": "cancelled"}
+    """
+    try:
+        booking = get_object_or_404(Booking, id=booking_id)
+        data = json.loads(request.body)
+        new_status = data.get("status", "").lower()
+
+        if new_status not in ["completed", "cancelled"]:
+            return JsonResponse({"success": False, "error": "Invalid status"}, status=400)
+
+        # Update status
+        booking.status = new_status
+        booking.save()
+
+        # Free slot logic can be implemented if you have a field tracking occupied slots
+        # Example:
+        # booking.outlet.occupied_slots = max(0, booking.outlet.occupied_slots - 1)
+        # booking.outlet.save()
+
+        return JsonResponse({"success": True})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)

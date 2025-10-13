@@ -25,6 +25,9 @@ import requests
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.contrib import messages
+from datetime import datetime
+from outlets.utils import can_book_outlet_at
 
 
 
@@ -45,7 +48,6 @@ def index(request):
     }
     return render(request, "appointment/index.html", context)
 
-
 @require_http_methods(["POST"])
 def book_appointment(request):
     data = request.POST
@@ -54,12 +56,33 @@ def book_appointment(request):
     mobile_no   = (data.get("mobile_no") or "").strip()
     outlet_id   = data.get("outlet")
     service_ids = data.getlist("services")  # multiple checkboxes share the same name
-    booking_date = data.get("booking_date")
-    booking_time = data.get("booking_time")
+    booking_date_str = data.get("booking_date")
+    booking_time_str = data.get("booking_time")
 
-    outlet = Outlet.objects.filter(pk=outlet_id).first()
+    # Validate required fields
+    if not full_name or not mobile_no or not outlet_id or not booking_date_str or not booking_time_str:
+        messages.error(request, "Please fill all required fields.")
+        return redirect('public_home')
+
+    # Convert date and time strings to Python objects
+    try:
+        booking_date = datetime.strptime(booking_date_str, "%Y-%m-%d").date()
+        booking_time = datetime.strptime(booking_time_str, "%H:%M").time()
+    except ValueError:
+        messages.error(request, "Invalid date or time format.")
+        return redirect('public_home')
+
+    # Fetch outlet and selected services
+    outlet = get_object_or_404(Outlet, pk=outlet_id)
     services = Service.objects.filter(id__in=service_ids)
 
+    # Check if booking is allowed
+    can_book, message = can_book_outlet_at(outlet, booking_date, booking_time)
+    if not can_book:
+        messages.error(request, message)
+        return redirect('public_home')
+
+    # Everything is valid, create booking
     try:
         with transaction.atomic():
             booking = Booking.objects.create(
@@ -71,20 +94,22 @@ def book_appointment(request):
                 booking_time=booking_time,
                 status="pending",
                 payment_status="pending",
+                payment_method=None
             )
 
+            # Link selected services to the booking
             BookingService.objects.bulk_create(
                 [BookingService(booking=booking, service=s) for s in services]
             )
 
-        # Redirect to payment options page
-            return redirect('payment_page', booking_id=booking.id)
+        messages.success(request, "Your booking has been created successfully.")
+        # Redirect to payment page
+        return redirect('payment_page', booking_id=booking.id)
 
     except Exception as e:
-        # Redirect back to homepage if something fails
+        # Log exception if needed
+        messages.error(request, "Something went wrong while creating your booking. Please try again.")
         return redirect('public_home')
-
-
 
 
 
@@ -141,6 +166,12 @@ def payment_page(request, booking_id):
 def pay_cash(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
 
+    # Set payment method to cash and keep status pending
+    booking.payment_method = "cash"
+    booking.payment_status = "pending"
+    booking.status = "pending"
+    booking.save()
+
     # Compute services with prices in the view
     services_with_prices = []
     total = 0
@@ -159,11 +190,12 @@ def pay_cash(request, booking_id):
 
     context = {
         "booking": booking,
-        "services": services_with_prices,  # template uses this
+        "services": services_with_prices,
         "total": total
     }
 
     return render(request, "appointment/cash_success.html", context)
+
 
 # -------------------- Pay eSewa --------------------
 
@@ -228,7 +260,13 @@ def pay_esewa(request, booking_id):
 
 # -------------------- eSewa Success --------------------
 def esewa_success(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+    booking = get_object_or_404(Booking, pk=booking_id)
+
+    # Mark as paid and confirmed
+    booking.payment_method = "esewa"
+    booking.payment_status = "paid"
+    booking.status = "confirmed"
+    booking.save()
 
     # collect services and prices
     services_with_prices = []
@@ -249,8 +287,9 @@ def esewa_success(request, booking_id):
         'booking': booking,
         'services': services_with_prices,
         'total': total,
+        'message': "Your payment was successful and booking is confirmed!"
     }
-    return render(request, "appointment/esewa_success.html", context)
+    return render(request, "appointment/payment_success.html", context)
 
 def esewa_failure(request, booking_id):
     return HttpResponse("Payment failed. Please try again.")

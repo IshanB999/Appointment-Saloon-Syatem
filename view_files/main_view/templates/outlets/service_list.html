@@ -1,8 +1,7 @@
 {% extends "main_base.html" %}
 {% load custom_filters %}
 
-{% block template_css %}
-{% endblock %}
+{% block template_css %}{% endblock %}
 
 {% block title %}
 Set Services for {{ outlet.name }}
@@ -50,7 +49,8 @@ Set Services for {{ outlet.name }}
                                     <tr>
                                         <td>{{ service.name }}</td>
                                         <td>
-                                            <input type="checkbox" class="service-checkbox" name="service_{{ service.id }}"
+                                            <input type="checkbox" class="service-checkbox"
+                                                   name="service_{{ service.id }}"
                                                    data-service-id="{{ service.id }}"
                                                    {% if service.id in existing_prices %}checked{% endif %}>
                                         </td>
@@ -67,7 +67,8 @@ Set Services for {{ outlet.name }}
                                     {% endfor %}
                                 </tbody>
                             </table>
-                            <button type="submit" class="btn btn-success">Save</button>
+
+                            <button type="submit" class="btn btn-success mt-3">Save</button>
                         </form>
 
                     </div>
@@ -81,7 +82,7 @@ Set Services for {{ outlet.name }}
 {% block js %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Enable/disable price input based on checkbox
+    // 1. Enable/disable price input based on checkbox
     const checkboxes = document.querySelectorAll(".service-checkbox");
     
     checkboxes.forEach(function(checkbox) {
@@ -99,15 +100,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Optional: filter table search
+    // 2. Optional: search/filter table rows by service name
     const filterSearch = document.querySelector('[data-ic-filter="search"]');
-    filterSearch.addEventListener("keyup", function(e) {
-        const term = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll("#basic-datatable tbody tr");
-        rows.forEach(function(row) {
-            const serviceName = row.querySelector("td:first-child").textContent.toLowerCase();
-            row.style.display = serviceName.includes(term) ? "" : "none";
+    if (filterSearch) {
+        filterSearch.addEventListener("keyup", function(e) {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll("#basic-datatable tbody tr");
+            rows.forEach(function(row) {
+                const serviceName = row.querySelector("td:first-child").textContent.toLowerCase();
+                row.style.display = serviceName.includes(term) ? "" : "none";
+            });
         });
+    }
+
+    // 3. Fade out success messages
+    const alerts = document.querySelectorAll(".alert-success");
+    alerts.forEach(function(alert) {
+        setTimeout(() => { alert.style.display = "none"; }, 5000);
     });
 });
 </script>

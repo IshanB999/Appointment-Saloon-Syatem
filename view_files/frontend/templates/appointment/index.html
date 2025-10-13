@@ -18,6 +18,15 @@
                 </div>
             </div>
 
+            <!-- Messages -->
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <!-- Appointment Form -->
             <div class="content">
                 <div class="common-form">
@@ -46,12 +55,15 @@
                                 </div>
                                 <div class="fields">
                                     <div class="form-group">
-                                        <select name="outlet" id="outlet">
-                                            <option value="">Choose your preferred location*</option>
-                                            {% for outlet in outlets %}
-                                            <option value="{{ outlet.id }}">{{ outlet.name }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <select name="outlet" id="outlet" required>
+    <option value="">Choose your preferred location*</option>
+    {% for outlet in outlets %}
+    <option value="{{ outlet.id }}" data-is-closed="{{ outlet.is_closed|yesno:'true,false' }}" data-slots="{{ outlet.total_slots }}">
+        {{ outlet.name }} {% if outlet.is_closed %}(Closed){% endif %}
+    </option>
+    {% endfor %}
+</select>
+
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +84,7 @@
                                         <input type="email" name="email" placeholder="Email Address*" required>
                                     </div>
                                     <div class="form-group half-width second-last">
-                                        <input type="date" name="booking_date" placeholder="Booking Date*" required>
+                                        <input type="date" name="booking_date" placeholder="Booking Date*" required min="{{ today|date:'Y-m-d' }}">
                                     </div>
                                     <div class="form-group half-width">
                                         <input type="time" name="booking_time" placeholder="Booking Time*" required>
@@ -113,92 +125,82 @@
 </style>
 
 <script>
-    // Navigation toggle script
-    (function () {
-        function $(s, r) { return (r || document).querySelector(s) }
-        function $all(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)) }
-        function openPanel(p) {
-            document.body.classList.add('body-height', 'menu-open');
-            if (!p) return;
-            p.classList.add('open', 'is-open', 'show', 'active');
-            p.setAttribute('aria-hidden', 'false');
-            p.style.display = 'block'; p.style.visibility = 'visible';
+document.addEventListener("DOMContentLoaded", function () {
+    const outletSelect = document.getElementById("outlet");
+    const serviceSection = document.getElementById("service-section");
+    const serviceContainer = document.getElementById("service-container");
+    const bookingForm = document.querySelector("form[action='{% url 'store_appointment_booking' %}']");
+
+    // Prevent booking if outlet is closed
+    bookingForm.addEventListener("submit", function(e) {
+        const selectedOption = outletSelect.options[outletSelect.selectedIndex];
+        if (!selectedOption) return;
+
+        const isClosed = selectedOption.dataset.isClosed === 'true';
+        if (isClosed) {
+            e.preventDefault();
+            alert("Sorry, this outlet is currently closed. You cannot make a booking here.");
+            return false;
         }
-        function closePanel(p) {
-            document.body.classList.remove('body-height', 'menu-open');
-            if (!p) return;
-            p.classList.remove('open', 'is-open', 'show', 'active');
-            p.setAttribute('aria-hidden', 'true');
-            p.style.removeProperty('display'); p.style.removeProperty('visibility');
-        }
-        function bind() {
-            var panel = $('#navigation-wrapper');
-            $all('.common-toggle.type-menu.type-open').forEach(function (el) {
-                el.addEventListener('click', function (e) { e.preventDefault(); openPanel(panel); }, { passive: false });
-            });
-            $all('#navigation-wrapper .common-toggle.type-menu, .common-toggle.type-menu.type-close').forEach(function (el) {
-                el.addEventListener('click', function (e) { e.preventDefault(); closePanel(panel); }, { passive: false });
-            });
-            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(panel); });
-            if (panel) {
-                panel.addEventListener('click', function (e) { if (e.target === panel && document.body.classList.contains('menu-open')) closePanel(panel); });
-            }
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
-        else bind(); 
-    })();
-
-    // Dynamic services based on outlet selection
-    document.addEventListener("DOMContentLoaded", function () {
-        const outletSelect = document.getElementById("outlet");
-        const serviceSection = document.getElementById("service-section");
-        const serviceContainer = document.getElementById("service-container");
-
-        outletSelect.addEventListener("change", function () {
-            const outletId = this.value;
-
-            if (!outletId) {
-                serviceSection.style.display = "none";
-                serviceContainer.innerHTML = "";
-                return;
-            }
-
-            fetch("{% url 'get_services_for_outlet' %}?outlet_id=" + outletId)
-                .then(response => response.json())
-                .then(data => {
-                    let html = "";
-
-                    if (data.gents.length > 0) {
-                        html += `<div class="checkbox-row">
-                                    <div class="common-title font-sm margin-lg"><h5>For Gents</h5></div>
-                                    <div class="checkbox-container">`;
-                        data.gents.forEach(service => {
-                            html += `<div class="checkbox-item">
-                                        <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
-                                        <label for="service_${service.id}">${service.name}</label>
-                                     </div>`;
-                        });
-                        html += `</div></div>`;
-                    }
-
-                    if (data.ladies.length > 0) {
-                        html += `<div class="checkbox-row">
-                                    <div class="common-title font-sm margin-lg"><h5>For Ladies</h5></div>
-                                    <div class="checkbox-container">`;
-                        data.ladies.forEach(service => {
-                            html += `<div class="checkbox-item">
-                                        <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
-                                        <label for="service_${service.id}">${service.name}</label>
-                                     </div>`;
-                        });
-                        html += `</div></div>`;
-                    }
-
-                    serviceContainer.innerHTML = html;
-
-                    // Show section only if services exist
-                    serviceSection.style.display = (html.trim() !== "") ? "block" : "none";
-                });
-        });
     });
+
+    outletSelect.addEventListener("change", function () {
+        const selectedOption = outletSelect.options[outletSelect.selectedIndex];
+        if (!selectedOption) return;
+
+        const outletId = this.value;
+        const isClosed = selectedOption.dataset.isClosed === 'true';
+
+        if (!outletId) {
+            serviceSection.style.display = "none";
+            serviceContainer.innerHTML = "";
+            return;
+        }
+
+        if (isClosed) {
+            alert("This outlet is currently closed. You cannot book an appointment.");
+            this.value = "";
+            serviceSection.style.display = "none";
+            serviceContainer.innerHTML = "";
+            return;
+        }
+
+        // Fetch services for the outlet
+        fetch("{% url 'get_services_for_outlet' %}?outlet_id=" + outletId)
+            .then(response => response.json())
+            .then(data => {
+                let html = "";
+
+                if (data.gents.length > 0) {
+                    html += `<div class="checkbox-row">
+                                <div class="common-title font-sm margin-lg"><h5>For Gents</h5></div>
+                                <div class="checkbox-container">`;
+                    data.gents.forEach(service => {
+                        html += `<div class="checkbox-item">
+                                    <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
+                                    <label for="service_${service.id}">${service.name}</label>
+                                 </div>`;
+                    });
+                    html += `</div></div>`;
+                }
+
+                if (data.ladies.length > 0) {
+                    html += `<div class="checkbox-row">
+                                <div class="common-title font-sm margin-lg"><h5>For Ladies</h5></div>
+                                <div class="checkbox-container">`;
+                    data.ladies.forEach(service => {
+                        html += `<div class="checkbox-item">
+                                    <input type="checkbox" id="service_${service.id}" name="services" value="${service.id}">
+                                    <label for="service_${service.id}">${service.name}</label>
+                                 </div>`;
+                    });
+                    html += `</div></div>`;
+                }
+
+                serviceContainer.innerHTML = html;
+                serviceSection.style.display = (html.trim() !== "") ? "block" : "none";
+            });
+    });
+});
+
 </script>

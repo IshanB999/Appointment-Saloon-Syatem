@@ -1,0 +1,206 @@
+{% extends "main_base.html" %}
+{% load i18n %}
+
+{% block title %}Slot Management - {{ outlet.name }}{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>Slot Management for {{ outlet.name }}</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="custom-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Slot Settings Form -->
+    <form method="post" class="common-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Total Slots (capacity)</label>
+            <input type="number" name="total_slots" min="1" value="{{ outlet.total_slots }}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Opening Time</label>
+            <input type="time" name="opening_time" value="{{ outlet.opening_time|time:'H:i' }}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label>Closing Time</label>
+            <input type="time" name="closing_time" value="{{ outlet.closing_time|time:'H:i' }}" class="form-control" />
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="is_closed" name="is_closed" {% if outlet.is_closed %}checked{% endif %}>
+            <label class="form-check-label" for="is_closed">Closed (no bookings allowed)</label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="co-btn">Save</button>
+            <a href="{% url 'admin_outlet_index' %}" class="co-btn">Back</a>
+        </div>
+    </form>
+
+    <!-- Today's Bookings Table -->
+    <div class="common-content-box mt-5">
+        <h5>Today's Bookings ({{ today|date:"D, M d, Y" }})</h5>
+        {% if bookings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Time</th>
+                    <th>Customer Name</th>
+                    <th>Mobile</th>
+                    <th>Services</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr id="booking-row-{{ booking.id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ booking.booking_time|time:"H:i" }}</td>
+                    <td>{{ booking.full_name }}</td>
+                    <td>{{ booking.mobile_no }}</td>
+                    <td>
+                        {% for bs in booking.bookingservice_set.all %}
+                            {{ bs.service.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td id="status-{{ booking.id }}">{{ booking.status|capfirst }}</td>
+                    <td>
+                        <button class="co-btn co-btn-sm change-status-btn" data-id="{{ booking.id }}" data-status="{{ booking.status|default:'' }}">Change Status</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No bookings yet for today.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .slot-box { font-size: 0.9rem; }
+    .common-content-box { margin-top: 2rem; }
+    .co-btn.co-btn-sm { padding: 4px 10px; font-size: 0.85rem; }
+    .modal-body label { font-weight: 500; }
+    .modal-body .form-check { margin-bottom: 10px; }
+</style>
+
+<!-- Status Change Popup -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Booking Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold mb-2">Select:</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="completedCheck">
+                    <label class="form-check-label" for="completedCheck">Completed</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="cancelledCheck">
+                    <label class="form-check-label" for="cancelledCheck">Cancelled</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="co-btn" id="saveStatusBtn">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const csrftoken = '{{ csrf_token }}';
+    let selectedBookingId = null;
+    const completedCheck = document.getElementById("completedCheck");
+    const cancelledCheck = document.getElementById("cancelledCheck");
+
+    // Make checkboxes mutually exclusive
+    completedCheck.addEventListener("change", () => {
+        if (completedCheck.checked) cancelledCheck.checked = false;
+    });
+    cancelledCheck.addEventListener("change", () => {
+        if (cancelledCheck.checked) completedCheck.checked = false;
+    });
+
+    // Open modal on "Change Status" click
+    document.querySelectorAll(".change-status-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            selectedBookingId = this.dataset.id;
+            const currentStatus = this.dataset.status.toLowerCase();
+
+            // Reset checkboxes
+            completedCheck.checked = (currentStatus === "completed");
+            cancelledCheck.checked = (currentStatus === "cancelled");
+
+            const statusModal = new bootstrap.Modal(document.getElementById("statusModal"));
+            statusModal.show();
+        });
+    });
+
+    // Save button logic
+    document.getElementById("saveStatusBtn").addEventListener("click", function () {
+        let newStatus = null;
+        if (completedCheck.checked) newStatus = "completed";
+        else if (cancelledCheck.checked) newStatus = "cancelled";
+        else {
+            alert("Please select a status before saving.");
+            return;
+        }
+
+        // AJAX request
+        if (!selectedBookingId) return;
+        fetch(`/admin/outlets/update-booking-status/${selectedBookingId}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ status: newStatus })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Update table
+                const statusCell = document.getElementById(`status-${selectedBookingId}`);
+                statusCell.innerText = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+
+                // Keep Change Status button
+                const actionCell = document.querySelector(`#booking-row-${selectedBookingId} td:last-child`);
+                actionCell.innerHTML = `<button class="co-btn co-btn-sm change-status-btn" data-id="${selectedBookingId}" data-status="${newStatus}">Change Status</button>`;
+
+                // Rebind click event
+                actionCell.querySelector(".change-status-btn").addEventListener("click", function () {
+                    selectedBookingId = this.dataset.id;
+                    const currentStatus = this.dataset.status.toLowerCase();
+                    completedCheck.checked = (currentStatus === "completed");
+                    cancelledCheck.checked = (currentStatus === "cancelled");
+                    const modal = new bootstrap.Modal(document.getElementById("statusModal"));
+                    modal.show();
+                });
+
+                // Close modal
+                const statusModalEl = document.getElementById("statusModal");
+                const modalInstance = bootstrap.Modal.getInstance(statusModalEl);
+                modalInstance.hide();
+            } else {
+                alert("Failed to update status.");
+            }
+        })
+        .catch(() => alert("Error updating status."));
+    });
+});
+</script>
+{% endblock %}

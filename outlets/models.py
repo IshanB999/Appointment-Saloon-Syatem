@@ -2,6 +2,7 @@ import os
 from django.db import models
 from django_softdelete.models import SoftDeleteModel
 from service.models import Service
+from datetime import time as dt_time
 
 
 class Outlet(SoftDeleteModel, models.Model):
@@ -21,9 +22,28 @@ class Outlet(SoftDeleteModel, models.Model):
     latitude = models.CharField(max_length=255, null=True, blank=True)
     longitude = models.CharField(max_length=255, null=True, blank=True)
     sort_order = models.IntegerField(null=True, blank=True)
-
+    
+    total_slots = models.PositiveIntegerField(
+        default=6,
+        help_text="Maximum concurrent bookings (default 6)"
+    )
+    opening_time = models.TimeField(
+        default=dt_time(hour=10, minute=0),
+        help_text="Default opening time"
+    )
+    closing_time = models.TimeField(
+        default=dt_time(hour=18, minute=0),
+        help_text="Default closing time"
+    )
+    is_closed = models.BooleanField(
+        default=False,
+        help_text="If true, outlet is closed for bookings"
+    )
     class Meta:
         db_table = "db_outlets"
+
+    def __str__(self):
+        return self.name or f"Outlet{self.pk}"
 
 
 class OutletServicePrice(models.Model):
@@ -37,3 +57,4 @@ class OutletServicePrice(models.Model):
 
     def __str__(self):
         return f"{self.outlet.name} - {self.service.name} ({self.price})"
+    

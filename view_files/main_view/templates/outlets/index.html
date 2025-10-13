@@ -1,8 +1,7 @@
 {% extends "main_base.html" %}
 {% load i18n static %}
 
-{% block template_css %}
-{% endblock %}
+{% block template_css %}{% endblock %}
 
 {% block title %}
 {{ title|default:"" }}
@@ -19,10 +18,11 @@
     <section class="content-section">
         <div class="custom-container">
             <div class="section-content">
+
                 {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-success"> {{ message}} </div>
-                {% endfor %}
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
 
                 <div class="common-content-box">
@@ -51,6 +51,7 @@
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -61,13 +62,10 @@
 <script>
 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 var dt;
-var table;
 
 var KTDatatablesServerSide = function () {
-    table;
-    dt;
 
-    function initDatatable(status = true) {
+    function initDatatable() {
         dt = $("#basic-datatable").DataTable({
             searchDelay: 500,
             processing: true,
@@ -82,14 +80,20 @@ var KTDatatablesServerSide = function () {
                 selector: 'td:first-child input[type="checkbox"]',
                 className: 'row-selected'
             },
-            'ajax': { url: "{% url 'admin_outlet_index' %}", type: 'POST', data: { 'csrfmiddlewaretoken': csrftoken } },
+            'ajax': {
+                url: "{% url 'admin_outlet_index' %}",
+                type: 'POST',
+                data: { 'csrfmiddlewaretoken': csrftoken }
+            },
             columns: [
+                // Serial Number
                 {
                     data: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
                     },
                     name: "sn", searchable: false, sortable: false
                 },
+                // Outlet Image with fallback
                 {
                     data: function (data) {
                         if (data.image) {
@@ -103,37 +107,33 @@ var KTDatatablesServerSide = function () {
                 { data: "name", name: "name" },
                 { data: "address", name: "address" },
                 { data: "mobile", name: "mobile" },
+
+                // Action buttons
                 {
-                    data: function (data, b, c, table) {
-                        var buttons = '';
-                        buttons += '<td>'
-                        buttons += '<ul class="type-action">'
-                        buttons += '<li>'
-                        buttons += '<div class="dropdown">'
-                        buttons += '<button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">'
-                        buttons += '<i class="flaticon-more"></i>'
-                        buttons += '</button>'
-                        buttons += '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">'
-                        buttons += '<li><a class="dropdown-item" href="/admin/outlets/' + data.id + '/services/">Manage Services</a></li>'
-                        buttons += `<li><a class="dropdown-item" href="{% url 'admin_outlet_edit' %}?id=` + data.id + `">Edit</a></li>`
-                        buttons += '<li><a class="dropdown-item type-delete" onclick="delete_json(' + data.id + ')" href="javascript::void(0)" title="Delete">Delete</a></li>'
-                        buttons += '</ul>'
-                        buttons += '</div>'
-                        buttons += '</li>'
-                        buttons += '</ul>'
-                        buttons += '</td>'
-                        return buttons
-                    }, name: 'action', searchable: false
+                    data: function (data) {
+                        var dropdownId = 'dropdownMenuButton' + data.id;
+                        var buttons = '<ul class="type-action"><li><div class="dropdown">';
+                        buttons += `<button class="dropdown-toggle" type="button" id="${dropdownId}" data-bs-toggle="dropdown" aria-expanded="false">`;
+                        buttons += '<i class="flaticon-more"></i></button>';
+                        buttons += `<ul class="dropdown-menu" aria-labelledby="${dropdownId}">`;
+                        buttons += `<li><a class="dropdown-item" href="/admin/outlets/${data.id}/services/">Manage Services</a></li>`;
+                        buttons += `<li><a class="dropdown-item" href="{% url 'admin_outlet_edit' %}?id=${data.id}">Edit</a></li>`;
+                        buttons += `<li><a class="dropdown-item" href="/admin/outlets/${data.id}/slot-management/">Slot Management</a></li>`;
+                        buttons += `<li><a class="dropdown-item type-delete" onclick="delete_json(${data.id})" href="javascript:void(0)" title="Delete">Delete</a></li>`;
+                        buttons += '</ul></div></li></ul>';
+                        return buttons;
+                    },
+                    name: 'action', searchable: false
                 },
             ],
             createdRow: function (row, data, dataIndex) {
+                // Optional: add any custom attributes
                 $(row).find('td:eq(3)').attr('data-filter');
             }
         });
 
-        table = dt.$;
         dt.on('draw', function () {
-            KTMenu.createInstances();
+            KTMenu.createInstances(); // initialize dropdowns
         });
     }
 
@@ -150,20 +150,13 @@ $(document).ready(function () {
     KTDatatablesServerSide.init();
 });
 
+// Delete function
 function delete_json(id) {
     alertify.confirm('Do you want to delete this item?', function () {
         $.post("{% url 'admin_outlet_delete' %}", { id: id, csrfmiddlewaretoken: csrftoken }, function () {
-            dt.ajax.reload(null, false);
+            dt.ajax.reload(null, false); // reload DataTable after deletion
         });
     });
-}
-
-function goToOutletServices(outlet_id) {
-    if(outlet_id) {
-        window.location.href = `/admin/outlets/${outlet_id}/services/`;
-    } else {
-        alert('Outlet ID missing!');
-    }
 }
 </script>
 {% endblock %}
