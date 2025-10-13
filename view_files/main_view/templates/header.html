@@ -70,14 +70,23 @@
                         </li>
                         {% endif %}
                         {% if perms.employees.view_employee %}
-<li>
-    <a href="{% url 'admin_employees_index' %}">
-        <span class="type-icon"><i class="flaticon-home"></i></span>
-        <span class="type-text">Employees</span>
-    </a>
-</li>
-{% endif %} 
+                        <li>
+                            <a href="{% url 'admin_employees_index' %}">
+                                    <span class="type-icon"><i class="flaticon-home"></i></span>
+                                    <span class="type-text">Employees</span>
+                            </a>
+                        </li>
+                        {% endif %} 
+                        {% if perms.employees.view_employee %}
+                        <li>
+                            <a href="{% url 'admin_employees_index' %}">
+                                    <span class="type-icon"><i class="flaticon-home"></i></span>
+                                    <span class="type-text">Employees</span>
+                            </a>
+                        </li>
+                        {% endif %} 
 
+                        
                     </ul>
                 </div>
 
