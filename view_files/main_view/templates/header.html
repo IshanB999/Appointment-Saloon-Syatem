@@ -85,6 +85,15 @@
                             </a>
                         </li>
                         {% endif %} 
+                        
+                        {% if perms.revenue_report.view_report %}
+                        <li>
+                            <a href="{% url 'admin_revenue_report_index' %}">
+                                    <span class="type-icon"><i class="flaticon-home"></i></span>
+                                    <span class="type-text">Revenue report</span>
+                            </a>
+                        </li>
+                        {% endif %} 
 
                         
                     </ul>

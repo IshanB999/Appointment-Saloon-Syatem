@@ -1,0 +1,160 @@
+{% extends "main_base.html" %}
+{% load static %}
+
+{% block title %}Revenue Report{% endblock %}
+
+{% block page_title %}
+<div class="block-item">
+    <h4>Revenue Report</h4>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="custom-container">
+
+    <!-- Date Range Filter -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" class="form-inline">
+                <div class="row g-2 align-items-end">
+                    <div class="col-auto">
+                        <label for="start_date" class="form-label">Start Date:</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control"
+                               value="{{ start_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-auto">
+                        <label for="end_date" class="form-label">End Date:</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control"
+                               value="{{ end_date|date:'Y-m-d' }}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Show Report</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Total Revenue Card -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center p-3">
+                <h6>Total Revenue (Completed Bookings Only)</h6>
+                <h2>{{ total_revenue }} NPR</h2>
+                <p class="text-muted small">From {{ start_date }} to {{ end_date }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue per Outlet Table -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="common-content-box mb-4">
+                <h5>Revenue per Outlet (Completed Bookings Only)</h5>
+                {% if revenue_per_outlet %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Outlet</th>
+                            <th>Revenue (NPR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in revenue_per_outlet %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ r.outlet }}</td>
+                            <td>{{ r.revenue }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No completed bookings found for this period.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Summary per Outlet -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="common-content-box mb-4">
+                <h5>Booking Summary per Outlet</h5>
+                {% if summary_per_outlet %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Outlet</th>
+                            <th>Completed</th>
+                            <th>Pending</th>
+                            <th>Cancelled</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in summary_per_outlet %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ s.outlet }}</td>
+                            <td class="text-success fw-bold">{{ s.completed }}</td>
+                            <td class="text-warning fw-bold">{{ s.pending }}</td>
+                            <td class="text-danger fw-bold">{{ s.cancelled }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No bookings found in this date range.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Bookings Table -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="common-content-box mb-4">
+                <h5>Completed Bookings ({{ start_date }} to {{ end_date }})</h5>
+                {% if bookings %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Booking Date</th>
+                            <th>Outlet</th>
+                            <th>Customer</th>
+                            <th>Total Price (NPR)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ b.booking_date }}</td>
+                            <td>{{ b.outlet.name }}</td>
+                            <td>{{ b.customer.name }}</td>
+                            <td>{{ b.total_price }}</td>
+                            <td><span class="badge bg-success">{{ b.status }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No completed bookings found within this date range.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card { border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.1); margin-bottom:20px; }
+.common-content-box { background:#fff; border-radius:10px; padding:15px; box-shadow:0 3px 8px rgba(0,0,0,0.08); margin-bottom:20px; }
+h5 { font-weight:600; }
+.table th { background-color:#f8f9fa; }
+</style>
+
+{% endblock %}

@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'service',
     'bookings',
     'employees',
+    'analytics',
+    'revenue_report',
     'widget_tweaks',
     
     
