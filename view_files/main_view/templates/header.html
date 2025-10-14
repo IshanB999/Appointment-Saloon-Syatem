@@ -77,11 +77,11 @@
                             </a>
                         </li>
                         {% endif %} 
-                        {% if perms.employees.view_employee %}
+                        {% if perms.analytics.view_analytic %}
                         <li>
-                            <a href="{% url 'admin_employees_index' %}">
+                            <a href="{% url 'admin_analytics_index' %}">
                                     <span class="type-icon"><i class="flaticon-home"></i></span>
-                                    <span class="type-text">Employees</span>
+                                    <span class="type-text">Analytics</span>
                             </a>
                         </li>
                         {% endif %} 
