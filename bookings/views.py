@@ -1,37 +1,55 @@
-from django.shortcuts import render
-from system.send_whatsapp import send_free_text, check_phone_number_id
-from django.http import HttpResponse
-from system.send_whatsapp_twilio import send_booking_alert, build_whatsapp_url
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from system.send_whatsapp_meta import send_whatsapp_message, build_whatsapp_message
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def send_message_view(request):
-    # to = "whatsapp:+9779861155943"
-    # msg = 'Hello from Django and WhatsApp!'
-    # try:
-    #     res = send_template(to, msg)
-    #     print(res)
-    #     return HttpResponse(res)
-    # except Exception as e:
-    #     print('error',e)
-    #     return HttpResponse({'status': 'error', 'message': str(e)})
-    
-    # try:
-    #     sid = send_booking_alert(name, phone, service, email=email)
-    #     return HttpResponse({"ok": True, "sid": sid})
-    # except Exception as e:
-    #     print(e)
-    #     # don't crash the booking if WA fails; just report/log
-    #     return HttpResponse({"ok": True, "wa_error": str(e)}, status=200)
-    name   = 'Niroj Prajapati'          # or data["name"]
-    phone  = '861155936'
-    service = 'Hair Cut'
-    email  = 'nioj@gmail.com' 
-    msg = (
-            f"Hello! I'd like to confirm my appointment.\n"
-            f"Name: {name}\n"
-            f"Phone: {phone}\n"
-            f"Service: {service}"
-        )
+    """
+    Test WhatsApp message sending via Meta API
+    """
 
-    url = build_whatsapp_url('+9779861155943', msg)
-    return redirect(url)
+    # Test booking data (you can replace this with real booking object later)
+    booking = type('Booking', (), {})()
+    booking.full_name = 'Niroj Prajapati'
+    booking.outlet = type('Outlet', (), {'name': 'Neel David Salon'})()
+    booking.booking_date = '2025-10-17'
+    booking.booking_time = '2:00 PM'
+
+    # Sample service data
+    services = [
+        {"name": "Hair Cut", "price": 500},
+        {"name": "Beard Trim", "price": 300}
+    ]
+    total = 800
+
+    # The recipient's WhatsApp number (must include country code, without '+')
+    recipient_phone = "9779845822329"
+
+    # Build message text
+    message_text = build_whatsapp_message(booking, services, total)
+
+    print("\n================ WHATSAPP DEBUG LOG =================")
+    print("Recipient Phone:", recipient_phone)
+    print("Message Text:\n", message_text)
+    print("=====================================================\n")
+
+    # Send the message
+    response = send_whatsapp_message(recipient_phone, message_text)
+
+    print("\n================ WHATSAPP API RESPONSE ================")
+    print(response)
+    print("======================================================\n")
+
+    # Handle the response
+    if "error" in response:
+        return JsonResponse({
+            "status": "failed",
+            "error": response["error"]
+        }, status=400)
+
+    return JsonResponse({
+        "status": "success",
+        "message": "WhatsApp message sent successfully!",
+        "response": response
+    })

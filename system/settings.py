@@ -164,13 +164,19 @@ LOGIN_REDIRECT_URL = '/admin'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.NewUser'
 
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('system_email')
-EMAIL_HOST_PASSWORD = config('smtp_password')
+EMAIL_HOST_USER = config('SYSTEM_EMAIL')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD')
 
+# WhatsApp Cloud API settings
+# from decouple import config
+
+WHATSAPP_PHONE_NUMBER_ID = config("WHATSAPP_PHONE_NUMBER_ID")
+WHATSAPP_ACCESS_TOKEN = config("WHATSAPP_ACCESS_TOKEN")
 
 
 WP_BASE = "https://demos.imagio.com.np/frontend/neeldavids"  # <-- change this
@@ -191,3 +197,9 @@ ESEWA_SECRET_KEY = "8gBm/:&EnhH.1/q"   # Sandbox Secret Key
 ESEWA_PRODUCT_CODE = "EPAYTEST"
 ESEWA_SUCCESS_URL = "http://127.0.0.1:8000/esewa/success/"
 ESEWA_FAILURE_URL = "http://127.0.0.1:8000/esewa/failure/"
+
+
+# WhatsApp Cloud API settings
+
+
+

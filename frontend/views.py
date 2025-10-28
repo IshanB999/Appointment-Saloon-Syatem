@@ -28,7 +28,8 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from datetime import datetime
 from outlets.utils import can_book_outlet_at
-
+from system.send_whatsapp_meta import send_whatsapp_message, build_whatsapp_message
+from django.contrib.auth.models import User
 
 
 @require_http_methods(["GET", "POST"])
@@ -97,6 +98,10 @@ def book_appointment(request):
                 payment_method=None
             )
 
+            mobile_no = mobile_no.strip()
+            if not mobile_no.startswith("977"):
+                mobile_no = "977" + mobile_no
+
             # Link selected services to the booking
             BookingService.objects.bulk_create(
                 [BookingService(booking=booking, service=s) for s in services]
@@ -163,39 +168,44 @@ def payment_page(request, booking_id):
     return render(request, "appointment/payment_page.html", context)
 
 # -------------------- Pay Cash --------------------
+
+
 def pay_cash(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
 
-    # Set payment method to cash and keep status pending
     booking.payment_method = "cash"
     booking.payment_status = "pending"
     booking.status = "pending"
     booking.save()
 
-    # Compute services with prices in the view
+    # Compute services with prices
     services_with_prices = []
     total = 0
     for bs in booking.bookingservice_set.all():
         sp = OutletServicePrice.objects.filter(outlet=booking.outlet, service=bs.service).first()
         price = sp.price if sp else 0
-        services_with_prices.append({
-            "name": bs.service.name,
-            "price": price
-        })
+        services_with_prices.append({"name": bs.service.name, "price": price})
         total += price
 
-    # Send email if needed
-    if booking.email:
-        send_appointment_email(booking, request)
+    # Send WhatsApp message
+    if booking.mobile_no:
+        phone = booking.mobile_no
+        if not phone.startswith("977"):
+            phone = "977" + phone  # prepend Nepal country code if missing
+        try:
+            message = build_whatsapp_message(booking, services_with_prices, total)
+            print('message:',message)
+            resp = send_whatsapp_message(phone, message)
+            print("WhatsApp Response:", resp)  # Log for debugging
+        except Exception as e:
+            print("WhatsApp send failed:", e)
 
     context = {
         "booking": booking,
         "services": services_with_prices,
         "total": total
     }
-
     return render(request, "appointment/cash_success.html", context)
-
 
 # -------------------- Pay eSewa --------------------
 
@@ -262,13 +272,12 @@ def pay_esewa(request, booking_id):
 def esewa_success(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id)
 
-    # Mark as paid and confirmed
     booking.payment_method = "esewa"
     booking.payment_status = "paid"
     booking.status = "confirmed"
     booking.save()
 
-    # collect services and prices
+    # Collect services and prices
     services_with_prices = []
     total = 0
     for bs in booking.bookingservice_set.all():
@@ -277,19 +286,30 @@ def esewa_success(request, booking_id):
             price = price_obj.price
         except OutletServicePrice.DoesNotExist:
             price = 0
-        services_with_prices.append({
-            'name': bs.service.name,
-            'price': price
-        })
+        services_with_prices.append({"name": bs.service.name, "price": price})
         total += price
 
+    # Send email
+    if booking.email:
+        send_appointment_email(booking, request)
+
+    # Send WhatsApp message
+    if booking.mobile_no:
+        phone = booking.mobile_no
+        if not phone.startswith("977"):
+            phone = "977" + phone  # prepend country code
+        message = build_whatsapp_message(booking, services_with_prices, total)
+        send_whatsapp_message(phone, message)
+
     context = {
-        'booking': booking,
-        'services': services_with_prices,
-        'total': total,
-        'message': "Your payment was successful and booking is confirmed!"
+        "booking": booking,
+        "services": services_with_prices,
+        "total": total,
+        "message": "Your payment was successful and booking is confirmed!"
     }
     return render(request, "appointment/payment_success.html", context)
+
+
 
 def esewa_failure(request, booking_id):
     return HttpResponse("Payment failed. Please try again.")
